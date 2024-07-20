@@ -4,3 +4,22 @@ export type User = {
   password: string;
   name: string;
 };
+
+enum Type {
+  income,
+  expense,
+}
+
+export type Transaction = {
+  id: string;
+  name: string;
+  type: Type;
+  date: string;
+  amount: number;
+  category?: string;
+};
+
+export type Category = {
+  total: number;
+  category: string;
+};

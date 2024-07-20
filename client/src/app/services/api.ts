@@ -20,6 +20,6 @@ export const api = createApi({
   reducerPath: "splitApi",
   baseQuery: baseQuery,
   refetchOnMountOrArgChange: true,
-  tagTypes: ["user"],
+  tagTypes: ["user", "transaction"],
   endpoints: () => ({}),
 });

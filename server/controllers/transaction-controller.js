@@ -3,9 +3,13 @@ const errorMessage = require("../utils/error-message");
 
 const transactionController = {
   createTransaction: async (req, res, next) => {
-    const { name, date, amount, category } = req.body;
-    if (!name || !date || !amount || !category) {
+    const { name, date, amount, category, type } = req.body;
+    if (!name || !date || !amount || !type) {
       return res.status(400).json({ error: "Field missing" });
+    }
+    console.log(type);
+    if (type !== "income" && type !== "expense") {
+      return res.status(400).json({ error: "Incorrect type" });
     }
 
     const userId = req.user.userId;
@@ -17,6 +21,7 @@ const transactionController = {
           amount: parseInt(amount),
           category: category.toLowerCase(),
           userId,
+          type,
         },
       });
 
@@ -56,11 +61,20 @@ const transactionController = {
           userId,
         },
       });
-      const categories = await prisma.transaction.groupBy({
+
+      const getCategories = await prisma.transaction.groupBy({
         by: ["category"],
         _sum: {
           amount: true,
         },
+        where: { userId },
+      });
+      const categories = [];
+      getCategories.forEach((category) => {
+        categories.push({
+          total: category._sum.amount,
+          category: category.category,
+        });
       });
       res.json({ transactions, categories });
     } catch (error) {
