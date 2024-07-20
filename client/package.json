@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@nextui-org/react": "^0.0.0-canary-20240629213226",
+    "@react-stately/data": "^3.11.4",
     "@reduxjs/toolkit": "^2.2.6",
     "firebase": "^10.12.3",
     "framer-motion": "^11.3.2",

@@ -11,13 +11,13 @@ const transactionController = {
     if (type !== "income" && type !== "expense") {
       return res.status(400).json({ error: "Incorrect type" });
     }
-
+    const newDate = new Date(date);
     const userId = req.user.userId;
     try {
       const transaction = await prisma.transaction.create({
         data: {
           name,
-          date,
+          date: newDate.toISOString(),
           amount: parseInt(amount),
           category: category.toLowerCase(),
           userId,
@@ -63,11 +63,21 @@ const transactionController = {
       });
 
       const getCategories = await prisma.transaction.groupBy({
-        by: ["category"],
+        by: "category",
         _sum: {
           amount: true,
         },
         where: { userId },
+      });
+      const byMonth = await prisma.transaction.aggregateRaw({
+        pipeline: [
+          {
+            $group: {
+              _id: { $dateToString: { format: "%Y-%m", date: "$date" } },
+              total: { $sum: "$amount" },
+            },
+          },
+        ],
       });
       const categories = [];
       getCategories.forEach((category) => {
@@ -76,7 +86,7 @@ const transactionController = {
           category: category.category,
         });
       });
-      res.json({ transactions, categories });
+      res.json({ transactions, categories, byMonth });
     } catch (error) {
       console.log(error);
       next(errorMessage(500, "Error in Get Transactions"));
