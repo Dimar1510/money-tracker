@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -14,30 +13,37 @@ const User = () => {
   const { data } = useCurrentQuery();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
-  return (
-    <Dropdown placement="bottom-end">
-      <DropdownTrigger>{data?.name}</DropdownTrigger>
-      <DropdownMenu
-        aria-label="Profile Actions"
-        variant="light"
-        disabledKeys={["user", "email"]}
-      >
-        <DropdownItem key="email" className="text-center">
-          {data?.email}
-        </DropdownItem>
-        <DropdownItem key="profile" textValue="Profile" href="/profile">
-          Profile
-        </DropdownItem>
-        <DropdownItem key="logout" color="danger" onClick={handleLogout}>
-          Log Out
-        </DropdownItem>
-      </DropdownMenu>
-    </Dropdown>
-  );
+
+  if (data)
+    return (
+      <Dropdown placement="bottom-end">
+        <DropdownTrigger>
+          <span className="cursor-pointer border-default-500 border rounded-lg py-1 px-4 hover:bg-default-900 hover:text-default-300">
+            Profile
+          </span>
+        </DropdownTrigger>
+        <DropdownMenu
+          aria-label="Profile Actions"
+          variant="light"
+          disabledKeys={["user", "email"]}
+        >
+          <DropdownItem key="user" className="text-center">
+            {data.name}
+          </DropdownItem>
+          <DropdownItem key="email" className="text-center">
+            {data.email}
+          </DropdownItem>
+          <DropdownItem key="logout" color="danger" onClick={handleLogout}>
+            Log Out
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    );
 };
 
 export default User;

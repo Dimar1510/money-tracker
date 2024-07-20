@@ -38,7 +38,7 @@ const Login = () => {
   const onSubmit = async (data: ILogin) => {
     try {
       await login(data).unwrap();
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       if (hasErrorField(error)) {
         setError(error.data.error);

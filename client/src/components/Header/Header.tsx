@@ -16,22 +16,7 @@ const Header = () => {
             <span className="text-default-800">Tracker</span>
           </h1>
         </NavLink>
-        <form>
-          <Input
-            placeholder="Search..."
-            startContent={<FaSearch />}
-            type="search"
-            className="w-24 xs:w-48 sm:w-64"
-          />
-        </form>
         <ul className="flex gap-4 items-center">
-          <li className="hidden sm:inline hover:underline">
-            <NavLink to={"/"}>Home</NavLink>
-          </li>
-          <li className="hidden sm:inline hover:underline">
-            <NavLink to={"/about"}>About</NavLink>{" "}
-          </li>
-
           {isAuth ? (
             <>
               <User />

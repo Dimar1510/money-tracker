@@ -45,7 +45,7 @@ const Register = () => {
     try {
       await register(data).unwrap();
       await login(data).unwrap();
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       if (hasErrorField(error)) {
         setError(error.data.error);
