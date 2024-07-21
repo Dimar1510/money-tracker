@@ -6,8 +6,8 @@ export type User = {
 };
 
 enum Type {
-  income,
-  expense,
+  income = "income",
+  expense = "expense",
 }
 
 export type Transaction = {
