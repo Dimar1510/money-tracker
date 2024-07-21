@@ -51,7 +51,7 @@ export const TransactionsList = () => {
   data?.categories.forEach((item) => {
     categories.push(item.category);
   });
-
+  const gridRef = useRef<AgGridReact>(null);
   const [error, setError] = useState("");
   const { handleSubmit, control, setValue } = useForm<ITransaction>({
     mode: "onChange",
@@ -200,6 +200,13 @@ export const TransactionsList = () => {
     }
   };
 
+  const onFilterTextBoxChanged = useCallback(() => {
+    gridRef.current!.api.setGridOption(
+      "quickFilterText",
+      (document.getElementById("filter-text-box") as HTMLInputElement).value
+    );
+  }, []);
+
   return (
     <div className="w-full">
       {edit ? "Edit " : "Create new "} transaction
@@ -273,8 +280,18 @@ export const TransactionsList = () => {
           )}
         </div>
       </form>
+      <div className="example-header">
+        <span>Quick Filter:</span>
+        <input
+          type="text"
+          id="filter-text-box"
+          placeholder="Filter..."
+          onInput={onFilterTextBoxChanged}
+        />
+      </div>
       <div className="ag-theme-quartz w-full h-full">
         <AgGridReact
+          ref={gridRef}
           rowSelection="multiple"
           columnDefs={columnDefs}
           rowData={data?.transactions}
