@@ -69,8 +69,14 @@ const transactionController = {
         },
         where: { userId },
       });
+
       const byMonth = await prisma.transaction.aggregateRaw({
         pipeline: [
+          {
+            $match: {
+              userId: { $oid: userId },
+            },
+          },
           {
             $group: {
               _id: { $dateToString: { format: "%Y-%m", date: "$date" } },
