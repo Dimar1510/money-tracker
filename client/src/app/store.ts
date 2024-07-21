@@ -21,6 +21,7 @@ const rootReducer = combineReducers({
 const persistConfig = {
   key: "user",
   storage,
+  blacklist: [api.reducerPath],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

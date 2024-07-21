@@ -23,3 +23,8 @@ export type Category = {
   total: number;
   category: string;
 };
+
+export type ByMonth = {
+  _id: string;
+  total: number;
+};

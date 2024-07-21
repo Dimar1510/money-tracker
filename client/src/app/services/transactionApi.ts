@@ -1,9 +1,10 @@
-import { Category, Transaction, User } from "../types";
+import { ByMonth, Category, Transaction, User } from "../types";
 import { api } from "./api";
 
 type GetTransactions = {
   transactions: Transaction[];
   categories: Category[];
+  byMonth: ByMonth[];
 };
 
 export const userApi = api.injectEndpoints({
