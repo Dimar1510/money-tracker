@@ -1,5 +1,6 @@
 const { prisma } = require("../prisma/prisma-client");
 const errorMessage = require("../utils/error-message");
+const { format } = require("date-fns");
 
 const transactionController = {
   createTransaction: async (req, res, next) => {
@@ -92,7 +93,14 @@ const transactionController = {
           category: category.category,
         });
       });
-      res.json({ transactions, categories, byMonth });
+      const newTransactions = [];
+      transactions.forEach((item) => {
+        newTransactions.push({
+          ...item,
+          date: format(new Date(item.date), "yyyy-MM-dd"),
+        });
+      });
+      res.json({ transactions: newTransactions, categories, byMonth });
     } catch (error) {
       console.log(error);
       next(errorMessage(500, "Error in Get Transactions"));

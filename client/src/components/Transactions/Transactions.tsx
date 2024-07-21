@@ -1,130 +1,102 @@
-import React, { useEffect, useState } from "react";
+import { useRef } from "react";
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 import {
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  getKeyValue,
-  Spinner,
-  Button,
-  button,
-} from "@nextui-org/react";
+  GridReadyEvent,
+  GridApi,
+  ColDef,
+  ValueFormatterParams,
+} from "ag-grid-community";
 import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
-import { useAsyncList } from "@react-stately/data";
-import { Transaction } from "src/app/types";
-import { MdDeleteOutline, MdOutlineModeEdit } from "react-icons/md";
+import { AG_GRID_LOCALE_RU } from "src/utils/locale.ru";
 
-export default function TransactionsList() {
-  const { data } = useGetAllTransactionsQuery();
-  const [isLoading, setIsLoading] = useState(true);
-  const transactions: Transaction[] = data ? data.transactions : [];
+const dateFormatter = (params: ValueFormatterParams): string => {
+  return new Date(params.value).toLocaleDateString("ru-ru", {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
 
-  let list = data
-    ? useAsyncList<Transaction, string>({
-        load() {
-          setIsLoading(false);
-
-          return {
-            items: transactions,
-          };
-        },
-        async sort({ items, sortDescriptor }) {
-          return {
-            items: items.sort((a, b) => {
-              let first = a[sortDescriptor.column as keyof typeof a];
-              let second = b[sortDescriptor.column as keyof typeof b];
-              if (first === undefined || second === undefined) {
-                return 0;
-              }
-              let cmp =
-                (parseInt(first as string) || first) <
-                (parseInt(second as string) || second)
-                  ? -1
-                  : 1;
-
-              if (sortDescriptor.direction === "descending") {
-                cmp *= -1;
-              }
-
-              return cmp;
-            }),
-          };
-        },
-      })
-    : undefined;
-
-  const renderCell = React.useCallback(
-    (transaction: Transaction, columnKey: React.Key) => {
-      const cellValue = transaction[columnKey as keyof Transaction];
-
-      switch (columnKey) {
-        case "name":
-          return (
-            <input
-              type="text"
-              name="name"
-              defaultValue={transaction.name}
-              className="bg-transparent"
-            />
-          );
-
-        case "actions":
-          return (
-            <div className="flex gap-2">
-              <button onClick={() => console.log(transaction.id)}>
-                <MdDeleteOutline />
-              </button>
-            </div>
-          );
-        default:
-          return cellValue;
-      }
+const columnDefs: ColDef[] = [
+  {
+    headerName: "Name",
+    field: "name",
+    minWidth: 50,
+    flex: 1,
+    filter: true,
+  },
+  {
+    headerName: "Type",
+    field: "type",
+    minWidth: 50,
+    flex: 1,
+  },
+  {
+    headerName: "Date",
+    field: "date",
+    minWidth: 50,
+    flex: 1,
+    filter: "agDateColumnFilter",
+    valueFormatter: dateFormatter,
+  },
+  {
+    headerName: "Amount",
+    field: "amount",
+    minWidth: 50,
+    flex: 1,
+    filter: "agNumberColumnFilter",
+    valueFormatter: (params: ValueFormatterParams) => {
+      return "₽ " + params.value.toLocaleString();
     },
-    []
-  );
-  if (data && list)
-    return (
-      <Table
-        isStriped
-        aria-label="All transactions"
-        sortDescriptor={list.sortDescriptor}
-        onSortChange={list.sort}
+  },
+  {
+    headerName: "Category",
+    field: "category",
+    minWidth: 50,
+    flex: 1,
+  },
+];
+
+type AgGridApi = {
+  grid?: GridApi;
+  column?: GridApi;
+};
+
+const gridOptions = {
+  localeText: AG_GRID_LOCALE_RU,
+};
+
+export const TransactionsList = () => {
+  const { data } = useGetAllTransactionsQuery();
+  const apiRef = useRef<AgGridApi>({
+    grid: undefined,
+    column: undefined,
+  });
+  const onGridReady = (params: GridReadyEvent) => {
+    apiRef.current.grid = params.api;
+    apiRef.current.column = params.api;
+  };
+
+  return (
+    <div className="w-full">
+      <div
+        style={{ height: "100%", width: "100%" }}
+        className="ag-theme-quartz "
       >
-        <TableHeader>
-          <TableColumn key="name" allowsSorting>
-            Name
-          </TableColumn>
-          <TableColumn key="type" allowsSorting>
-            Type
-          </TableColumn>
-          <TableColumn key="date" allowsSorting>
-            Date
-          </TableColumn>
-          <TableColumn key="amount" allowsSorting>
-            Amount
-          </TableColumn>
-          <TableColumn key="category" allowsSorting>
-            Category
-          </TableColumn>
-          <TableColumn key="actions" allowsSorting>
-            Actions
-          </TableColumn>
-        </TableHeader>
-        <TableBody
-          items={list.items}
-          isLoading={isLoading}
-          loadingContent={<Spinner label="Loading..." />}
-        >
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    );
-}
+        <AgGridReact
+          rowSelection="multiple"
+          suppressRowClickSelection
+          columnDefs={columnDefs}
+          onGridReady={onGridReady}
+          rowData={data?.transactions}
+          gridOptions={gridOptions}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default TransactionsList;

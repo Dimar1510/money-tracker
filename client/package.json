@@ -10,9 +10,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ag-grid-community/client-side-row-model": "^32.0.2",
+    "@ag-grid-community/core": "^32.0.2",
+    "@ag-grid-community/react": "^32.0.2",
+    "@ag-grid-community/styles": "^32.0.2",
+    "@ag-grid-enterprise/set-filter": "^32.0.2",
     "@nextui-org/react": "^0.0.0-canary-20240629213226",
     "@react-stately/data": "^3.11.4",
     "@reduxjs/toolkit": "^2.2.6",
+    "ag-grid-community": "^32.0.2",
+    "ag-grid-react": "^32.0.2",
     "firebase": "^10.12.3",
     "framer-motion": "^11.3.2",
     "react": "^18.3.1",
