@@ -22,5 +22,10 @@ router.delete(
   authenticateToken,
   TransactionController.deleteTransaction
 );
+router.put(
+  "/transactions/:id",
+  authenticateToken,
+  TransactionController.updateTransaction
+);
 
 module.exports = router;

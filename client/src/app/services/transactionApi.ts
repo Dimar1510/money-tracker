@@ -1,3 +1,4 @@
+import { ITransaction } from "src/components/Transactions/Transactions";
 import { ByMonth, Category, Transaction, User } from "../types";
 import { api } from "./api";
 
@@ -9,14 +10,25 @@ type GetTransactions = {
 
 export const userApi = api.injectEndpoints({
   endpoints: (build) => ({
-    createTransaction: build.mutation<Transaction, Transaction>({
-      query: (userData) => ({
+    createTransaction: build.mutation<Transaction, { itemData: ITransaction }>({
+      query: ({ itemData }) => ({
         url: "/transactions",
         method: "POST",
-        body: userData,
+        body: itemData,
       }),
+      invalidatesTags: ["transaction"],
     }),
-
+    updateTransaction: build.mutation<
+      Transaction,
+      { itemData: ITransaction; id: string }
+    >({
+      query: ({ itemData, id }) => ({
+        url: `/transactions/${id}`,
+        method: "PUT",
+        body: itemData,
+      }),
+      invalidatesTags: ["transaction"],
+    }),
     getAllTransactions: build.query<GetTransactions, void>({
       query: () => ({
         url: "/transactions",
@@ -24,11 +36,29 @@ export const userApi = api.injectEndpoints({
       }),
       providesTags: ["transaction"],
     }),
+
+    deleteTransaction: build.mutation<void, { ids: string[] }>({
+      query: ({ ids }) => ({
+        url: `/transactions`,
+        method: "DELETE",
+        body: ids,
+      }),
+      invalidatesTags: ["transaction"],
+    }),
   }),
 });
 
-export const { useGetAllTransactionsQuery, useCreateTransactionMutation } =
-  userApi;
 export const {
-  endpoints: { createTransaction, getAllTransactions },
+  useGetAllTransactionsQuery,
+  useCreateTransactionMutation,
+  useDeleteTransactionMutation,
+  useUpdateTransactionMutation,
+} = userApi;
+export const {
+  endpoints: {
+    createTransaction,
+    getAllTransactions,
+    deleteTransaction,
+    updateTransaction,
+  },
 } = userApi;

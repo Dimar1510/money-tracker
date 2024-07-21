@@ -2,6 +2,7 @@ const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
 const logger = require("morgan");
 require("dotenv").config();
 const cors = require("cors");
@@ -12,6 +13,11 @@ const app = express();
 app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.set("view engine", "pug");
