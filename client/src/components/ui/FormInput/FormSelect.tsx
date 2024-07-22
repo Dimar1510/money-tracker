@@ -1,6 +1,12 @@
 import React from "react";
 import { Control, useController } from "react-hook-form";
-import { Select, SelectItem } from "@nextui-org/react";
+import {
+  Button,
+  ButtonGroupProps,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
+import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
 
 type Props = {
   name: string;
@@ -8,7 +14,7 @@ type Props = {
   placeholder?: string;
   control: Control<any>;
   required?: string;
-  endContent?: JSX.Element;
+  content?: JSX.Element;
   items: {
     key: string;
     label: string;
@@ -22,6 +28,7 @@ const FormSelect: React.FC<Props> = ({
   control,
   required,
   items,
+  content,
 }) => {
   const {
     field,
@@ -36,20 +43,47 @@ const FormSelect: React.FC<Props> = ({
   });
 
   return (
-    <Select
-      items={items}
-      id={name}
-      label={label}
-      placeholder={placeholder}
-      selectedKeys={[field.value]}
-      name={field.name}
-      isInvalid={invalid}
-      onChange={field.onChange}
-      onBlur={field.onBlur}
-      errorMessage={`${errors[name]?.message ?? ""}`}
-    >
-      {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
-    </Select>
+    <div className="flex gap-1 flex-1 items-center">
+      <Select
+        startContent={
+          field.value === "income" ? (
+            <FaLongArrowAltUp className="text-success-600" />
+          ) : (
+            field.value === "expense" && (
+              <FaLongArrowAltDown className="text-danger-800" />
+            )
+          )
+        }
+        items={items}
+        id={name}
+        label={label}
+        placeholder={placeholder}
+        selectedKeys={[field.value]}
+        name={field.name}
+        isInvalid={invalid}
+        onChange={field.onChange}
+        onBlur={field.onBlur}
+        errorMessage={`${errors[name]?.message ?? ""}`}
+      >
+        {(item) => (
+          <SelectItem
+            startContent={
+              item.key === "income" ? (
+                <FaLongArrowAltUp className="text-success-600" />
+              ) : (
+                item.key === "expense" && (
+                  <FaLongArrowAltDown className="text-danger-800" />
+                )
+              )
+            }
+            key={item.key}
+          >
+            {item.label}
+          </SelectItem>
+        )}
+      </Select>
+      {name === "category" && <button type="button">+</button>}
+    </div>
   );
 };
 

@@ -83,7 +83,7 @@ const FormTransaction: FC<IProps> = ({
         <Button onClick={handleDeleteMany}>Delete {remove.length} items</Button>
       )}
       <form
-        className="flex gap-2"
+        className="flex gap-2 items-start"
         onSubmit={handleSubmit(onSubmit)}
         onReset={reset}
       >
@@ -93,6 +93,7 @@ const FormTransaction: FC<IProps> = ({
           label="Name"
           type="text"
           required="Name required"
+          className="max-w-40"
         />
         <FormInput
           control={control}
@@ -100,6 +101,7 @@ const FormTransaction: FC<IProps> = ({
           label="Amount"
           type="number"
           required="Amount required"
+          className="max-w-32"
         />
         <FormInput
           control={control}
@@ -107,6 +109,7 @@ const FormTransaction: FC<IProps> = ({
           label="Date"
           type="date"
           required="Date required"
+          className="max-w-32"
         />
 
         <FormSelect

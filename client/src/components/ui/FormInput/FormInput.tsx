@@ -10,6 +10,7 @@ type Props = {
   control: Control<any>;
   required?: string;
   endContent?: JSX.Element;
+  className?: string;
 };
 
 const FormInput: React.FC<Props> = ({
@@ -20,6 +21,7 @@ const FormInput: React.FC<Props> = ({
   control,
   required,
   endContent,
+  className,
 }) => {
   const {
     field,
@@ -48,6 +50,7 @@ const FormInput: React.FC<Props> = ({
       maxLength={16}
       autoComplete="input"
       ref={field.ref}
+      className={className}
     />
   );
 };

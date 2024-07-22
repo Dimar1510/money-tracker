@@ -1,4 +1,10 @@
-import { FunctionComponent, useCallback, useRef, useState } from "react";
+import {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
@@ -41,17 +47,25 @@ export const TransactionsList = () => {
   const [edit, setEdit] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [remove, setRemove] = useState<string[]>([]);
-  const categories: { key: string; label: string }[] = [];
-  data?.categories.forEach((item) => {
-    categories.push({ key: item.category, label: item.category });
-  });
   const gridRef = useRef<AgGridReact>(null);
+
+  // load categories
+
+  const getCategories = data ? data.categories : [];
+  const categories: { key: string; label: string }[] = [
+    { key: "__other", label: "Другое" },
+  ];
+  getCategories.forEach((item) => {
+    if (item.category !== "__other")
+      categories.push({ key: item.category, label: item.category });
+  });
 
   const { handleSubmit, control, setValue } = useForm<ITransaction>({
     mode: "onChange",
     reValidateMode: "onBlur",
     defaultValues: {
       type: "expense",
+      category: "__other",
     },
   });
 
@@ -148,6 +162,9 @@ export const TransactionsList = () => {
       cellEditor: "agSelectCellEditor",
       cellEditorParams: {
         values: categories,
+      },
+      valueFormatter: (params: ValueFormatterParams) => {
+        return params.value === "__other" ? "Другое" : params.value;
       },
     },
     {
