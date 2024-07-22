@@ -1,25 +1,27 @@
 import React from "react";
 import { Control, useController } from "react-hook-form";
-import { Input as NextInput } from "@nextui-org/react";
+import { Select, SelectItem } from "@nextui-org/react";
 
 type Props = {
   name: string;
   label: string;
   placeholder?: string;
-  type?: string;
   control: Control<any>;
   required?: string;
   endContent?: JSX.Element;
+  items: {
+    key: string;
+    label: string;
+  }[];
 };
 
-const FormInput: React.FC<Props> = ({
+const FormSelect: React.FC<Props> = ({
   name,
   label,
   placeholder,
-  type,
   control,
   required,
-  endContent,
+  items,
 }) => {
   const {
     field,
@@ -31,25 +33,24 @@ const FormInput: React.FC<Props> = ({
     rules: {
       required,
     },
-    defaultValue: "",
   });
+
   return (
-    <NextInput
+    <Select
+      items={items}
       id={name}
       label={label}
       placeholder={placeholder}
-      type={type}
-      value={field.value}
+      selectedKeys={[field.value]}
       name={field.name}
       isInvalid={invalid}
       onChange={field.onChange}
       onBlur={field.onBlur}
       errorMessage={`${errors[name]?.message ?? ""}`}
-      maxLength={16}
-      autoComplete="input"
-      ref={field.ref}
-    />
+    >
+      {(item) => <SelectItem key={item.key}>{item.label}</SelectItem>}
+    </Select>
   );
 };
 
-export default FormInput;
+export default FormSelect;

@@ -7,21 +7,16 @@ import {
   ValueFormatterParams,
   SelectionChangedEvent,
 } from "ag-grid-community";
-
 import {
-  useCreateTransactionMutation,
   useDeleteTransactionMutation,
   useGetAllTransactionsQuery,
-  useUpdateTransactionMutation,
 } from "src/app/services/transactionApi";
 import { AG_GRID_LOCALE_RU } from "src/utils/locale.ru";
 import type { CustomCellRendererProps } from "@ag-grid-community/react";
-import { Button } from "@nextui-org/react";
 import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
-import ErrorMessage from "../ui/error-message/ErrorMessage";
 import { useForm } from "react-hook-form";
-import FormInput from "../ui/FormInput/FormInput";
 import { hasErrorField } from "src/utils/has-error-field";
+import FormTransaction from "./FormTransaction";
 
 const dateFormatter = (params: ValueFormatterParams): string => {
   return new Date(params.value).toLocaleDateString("ru-ru", {
@@ -43,19 +38,21 @@ export interface ITransaction {
 export const TransactionsList = () => {
   const { data } = useGetAllTransactionsQuery();
   const [deleteTransaction] = useDeleteTransactionMutation();
-  const [createTransaction] = useCreateTransactionMutation();
-  const [updateTransaction] = useUpdateTransactionMutation();
   const [edit, setEdit] = useState<string | null>(null);
+  const [error, setError] = useState("");
   const [remove, setRemove] = useState<string[]>([]);
-  const categories: string[] = [];
+  const categories: { key: string; label: string }[] = [];
   data?.categories.forEach((item) => {
-    categories.push(item.category);
+    categories.push({ key: item.category, label: item.category });
   });
   const gridRef = useRef<AgGridReact>(null);
-  const [error, setError] = useState("");
+
   const { handleSubmit, control, setValue } = useForm<ITransaction>({
     mode: "onChange",
     reValidateMode: "onBlur",
+    defaultValues: {
+      type: "expense",
+    },
   });
 
   const reset = () => {
@@ -102,9 +99,6 @@ export const TransactionsList = () => {
     );
   };
 
-  const gridOptions = {
-    localeText: AG_GRID_LOCALE_RU,
-  };
   const columnDefs: ColDef[] = [
     {
       headerName: "Name",
@@ -123,6 +117,9 @@ export const TransactionsList = () => {
       cellEditor: "agSelectCellEditor",
       cellEditorParams: {
         values: ["income", "expense"],
+      },
+      valueFormatter: (params: ValueFormatterParams) => {
+        return params.value === "income" ? "доход" : "расход";
       },
     },
     {
@@ -161,23 +158,6 @@ export const TransactionsList = () => {
     },
   ];
 
-  const onSubmit = async (data: ITransaction) => {
-    try {
-      if (edit) {
-        await updateTransaction({ itemData: data, id: edit }).unwrap();
-      } else {
-        await createTransaction({ itemData: data }).unwrap();
-      }
-      setEdit(null);
-      reset();
-      setError("");
-    } catch (error) {
-      if (hasErrorField(error)) {
-        setError(error.data.error);
-      }
-    }
-  };
-
   const onSelectionChanged = (event: SelectionChangedEvent) => {
     const rowCount = event.api.getSelectedNodes();
     const ids: Set<string> = new Set();
@@ -185,19 +165,6 @@ export const TransactionsList = () => {
       ids.add(node.data.id);
     });
     setRemove([...ids]);
-  };
-
-  const handleDeleteMany = async () => {
-    try {
-      reset();
-      setEdit(null);
-      await deleteTransaction({ ids: remove }).unwrap();
-      setError("");
-    } catch (error) {
-      if (hasErrorField(error)) {
-        setError(error.data.error);
-      }
-    }
   };
 
   const onFilterTextBoxChanged = useCallback(() => {
@@ -209,77 +176,17 @@ export const TransactionsList = () => {
 
   return (
     <div className="w-full">
-      {edit ? "Edit " : "Create new "} transaction
-      <ErrorMessage error={error} />
-      {remove.length > 0 && (
-        <Button onClick={handleDeleteMany}>Delete {remove.length} items</Button>
-      )}
-      <form
-        className="flex gap-2"
-        onSubmit={handleSubmit(onSubmit)}
-        onReset={reset}
-      >
-        <FormInput
-          control={control}
-          name="name"
-          label="Name"
-          type="text"
-          required="Name required"
-        />
-        <FormInput
-          control={control}
-          name="amount"
-          label="Amount"
-          type="number"
-          required="Amount required"
-        />
-        <FormInput
-          control={control}
-          name="date"
-          label="Date"
-          type="date"
-          required="Date required"
-        />
-        <FormInput
-          control={control}
-          name="category"
-          label="Category"
-          type="text"
-          required="Category required"
-        />
-        <FormInput
-          control={control}
-          name="type"
-          label="Type"
-          type="text"
-          required="Type required"
-        />
-
-        <div>
-          {edit ? (
-            <div className="flex gap-2">
-              <Button
-                type="button"
-                className="w-full"
-                color="primary"
-                onClick={() => {
-                  reset();
-                  setEdit(null);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button type="submit" className="w-full" color="primary">
-                Save
-              </Button>
-            </div>
-          ) : (
-            <Button type="submit" className="w-full" color="primary">
-              Add
-            </Button>
-          )}
-        </div>
-      </form>
+      <FormTransaction
+        remove={remove}
+        edit={edit}
+        error={error}
+        setEdit={setEdit}
+        setError={setError}
+        control={control}
+        handleSubmit={handleSubmit}
+        reset={reset}
+        categories={categories}
+      />
       <div className="example-header">
         <span>Quick Filter:</span>
         <input
@@ -295,7 +202,7 @@ export const TransactionsList = () => {
           rowSelection="multiple"
           columnDefs={columnDefs}
           rowData={data?.transactions}
-          gridOptions={gridOptions}
+          gridOptions={{ localeText: AG_GRID_LOCALE_RU }}
           suppressRowClickSelection={true}
           onSelectionChanged={onSelectionChanged}
         />
