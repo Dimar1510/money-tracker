@@ -12,6 +12,7 @@ import {
   ColDef,
   ValueFormatterParams,
   SelectionChangedEvent,
+  GridReadyEvent,
 } from "ag-grid-community";
 import {
   useDeleteTransactionMutation,
@@ -23,6 +24,16 @@ import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { hasErrorField } from "src/utils/has-error-field";
 import FormTransaction from "./FormTransaction";
+import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  useDisclosure,
+} from "@nextui-org/react";
+import ErrorMessage from "../ui/error-message/ErrorMessage";
 
 const dateFormatter = (params: ValueFormatterParams): string => {
   return new Date(params.value).toLocaleDateString("ru-ru", {
@@ -48,10 +59,11 @@ export const TransactionsList = () => {
   const [error, setError] = useState("");
   const [remove, setRemove] = useState<string[]>([]);
   const gridRef = useRef<AgGridReact>(null);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   // load categories
 
-  const getCategories = data ? data.categories : [];
+  const getCategories = data ? data.totalExpenseByCategory : [];
   const categories: { key: string; label: string }[] = [
     { key: "__other", label: "Другое" },
   ];
@@ -60,7 +72,12 @@ export const TransactionsList = () => {
       categories.push({ key: item.category, label: item.category });
   });
 
-  const { handleSubmit, control, setValue } = useForm<ITransaction>({
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    reset: formReset,
+  } = useForm<ITransaction>({
     mode: "onChange",
     reValidateMode: "onBlur",
     defaultValues: {
@@ -70,11 +87,7 @@ export const TransactionsList = () => {
   });
 
   const reset = () => {
-    setValue("name", "");
-    setValue("date", "");
-    setValue("amount", 0);
-    setValue("category", "");
-    setValue("type", "");
+    formReset();
   };
 
   const ActionsCellRenderer: FunctionComponent<CustomCellRendererProps> = ({
@@ -94,15 +107,16 @@ export const TransactionsList = () => {
     };
     const onEditClick = () => {
       setEdit(node.data.id);
+      onOpen();
       setValue("name", node.data.name);
       setValue("date", node.data.date);
       setValue("amount", node.data.amount);
-      setValue("category", node.data.category);
+      setValue("category", node.data.category.name);
       setValue("type", node.data.type);
     };
 
     return (
-      <div className="flex gap-2 items-center justify-center h-full">
+      <div className="flex gap-4 items-center justify-center h-full">
         <button onClick={onEditClick}>
           <MdOutlineEdit />
         </button>
@@ -137,14 +151,6 @@ export const TransactionsList = () => {
       },
     },
     {
-      headerName: "Date",
-      field: "date",
-      minWidth: 50,
-      flex: 1,
-      filter: "agDateColumnFilter",
-      valueFormatter: dateFormatter,
-    },
-    {
       headerName: "Amount",
       field: "amount",
       minWidth: 50,
@@ -164,13 +170,21 @@ export const TransactionsList = () => {
         values: categories,
       },
       valueFormatter: (params: ValueFormatterParams) => {
-        return params.value === "__other" ? "Другое" : params.value;
+        return params.value.name === "__other" ? "Другое" : params.value.name;
       },
+    },
+    {
+      headerName: "Date",
+      field: "date",
+      minWidth: 50,
+      flex: 1,
+      filter: "agDateColumnFilter",
+      valueFormatter: dateFormatter,
     },
     {
       field: "",
       cellRenderer: ActionsCellRenderer,
-      width: 50,
+      width: 80,
       resizable: false,
     },
   ];
@@ -191,19 +205,59 @@ export const TransactionsList = () => {
     );
   }, []);
 
+  const sortGrid = (event: GridReadyEvent, field: string, sortDir: "desc") => {
+    const columnState = {
+      state: [
+        {
+          colId: field,
+          sort: sortDir,
+        },
+      ],
+    };
+    event.api.applyColumnState(columnState);
+  };
+
+  const handleDeleteMany = async () => {
+    try {
+      reset();
+      setEdit(null);
+      await deleteTransaction({ ids: remove }).unwrap();
+      setError("");
+    } catch (error) {
+      if (hasErrorField(error)) {
+        setError(error.data.error);
+      }
+    }
+  };
+
+  const gridOptions = {
+    defaultColDef: {
+      sortable: true,
+    },
+    localeText: AG_GRID_LOCALE_RU,
+    columnDefs,
+    onGridReady: function (event: GridReadyEvent) {
+      console.log("The grid is now ready", event);
+      sortGrid(event, "date", "desc");
+    },
+  };
+
   return (
     <div className="w-full">
-      <FormTransaction
-        remove={remove}
-        edit={edit}
-        error={error}
-        setEdit={setEdit}
-        setError={setError}
-        control={control}
-        handleSubmit={handleSubmit}
-        reset={reset}
-        categories={categories}
-      />
+      <ErrorMessage error={error} />
+      <Button
+        onPress={() => {
+          onOpen();
+          formReset();
+          setEdit(null);
+        }}
+      >
+        Добавить транзакцию
+      </Button>
+      {remove.length > 0 && (
+        <Button onClick={handleDeleteMany}>Delete {remove.length} items</Button>
+      )}
+
       <div className="example-header">
         <span>Quick Filter:</span>
         <input
@@ -219,11 +273,36 @@ export const TransactionsList = () => {
           rowSelection="multiple"
           columnDefs={columnDefs}
           rowData={data?.transactions}
-          gridOptions={{ localeText: AG_GRID_LOCALE_RU }}
+          gridOptions={gridOptions}
           suppressRowClickSelection={true}
           onSelectionChanged={onSelectionChanged}
         />
       </div>
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">
+                {edit ? "Редактировать " : "Создать "} транзакцию
+              </ModalHeader>
+              <ModalBody>
+                <FormTransaction
+                  remove={remove}
+                  edit={edit}
+                  error={error}
+                  setEdit={setEdit}
+                  setError={setError}
+                  control={control}
+                  handleSubmit={handleSubmit}
+                  reset={reset}
+                  categories={categories}
+                  onClose={onClose}
+                />
+              </ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </div>
   );
 };

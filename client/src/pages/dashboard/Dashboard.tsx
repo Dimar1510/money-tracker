@@ -24,7 +24,6 @@ const Dashboard = () => {
     return (
       <main className="flex gap-8 p-8">
         <div className="flex flex-col gap-6 min-w-[280px]">
-          <h1> Hello, {current.name}!</h1>
           <BalanceCard />
           <IncomeCard />
           <ExpenseCard />

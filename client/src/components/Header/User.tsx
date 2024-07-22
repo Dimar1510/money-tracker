@@ -24,7 +24,7 @@ const User = () => {
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
           <span className="cursor-pointer border-default-500 border rounded-lg py-1 px-4 hover:bg-default-900 hover:text-default-300">
-            My profile
+            {data.name} {">"}
           </span>
         </DropdownTrigger>
         <DropdownMenu

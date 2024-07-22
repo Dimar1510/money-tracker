@@ -16,12 +16,16 @@ export type Transaction = {
   type: Type;
   date: string;
   amount: number;
-  category?: string;
+  categoryId?: string;
+  category: {
+    name: string;
+  };
 };
 
 export type Category = {
   total: number;
   category: string;
+  categoryId: string;
 };
 
 export type ByMonth = {

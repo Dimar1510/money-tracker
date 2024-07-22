@@ -2,6 +2,48 @@ const { prisma } = require("../prisma/prisma-client");
 const errorMessage = require("../utils/error-message");
 const { format } = require("date-fns");
 
+const categoryHandle = async (category, userId) => {
+  let newCategoryId;
+  try {
+    if (category) {
+      const findCategory = await prisma.category.findFirst({
+        where: { AND: [{ userId }, { name: category.toLowerCase() }] },
+      });
+
+      if (!findCategory) {
+        const createCategory = await prisma.category.create({
+          data: {
+            name: category.toLowerCase(),
+            userId,
+          },
+        });
+        newCategoryId = createCategory.id;
+      } else {
+        newCategoryId = findCategory.id;
+      }
+    } else {
+      const nameless = await prisma.category.findUnique({
+        where: { name: "__other" },
+      });
+      if (!nameless) {
+        const createNameless = await prisma.category.create({
+          data: {
+            name: "__other",
+            userId,
+          },
+        });
+        newCategoryId = createNameless.id;
+      } else {
+        newCategoryId = nameless.id;
+      }
+    }
+    return newCategoryId;
+  } catch (error) {
+    console.log(error);
+    next(errorMessage(500, "Error in category handler"));
+  }
+};
+
 const transactionController = {
   createTransaction: async (req, res, next) => {
     const { name, date, amount, category, type } = req.body;
@@ -14,14 +56,18 @@ const transactionController = {
     const newDate = new Date(date);
     const userId = req.user.userId;
     try {
+      const newCategoryId = await categoryHandle(category, userId);
       const transaction = await prisma.transaction.create({
         data: {
           name,
           date: newDate.toISOString(),
           amount: parseInt(amount),
-          category: category.toLowerCase(),
+          categoryId: newCategoryId,
           userId,
           type,
+        },
+        include: {
+          category: { select: { name: true } },
         },
       });
 
@@ -62,30 +108,35 @@ const transactionController = {
     const { id } = req.params;
     const userId = req.user.userId;
     const { name, date, amount, category, type } = req.body;
-    const transaction = await prisma.transaction.findUnique({
-      where: { id },
-    });
-    if (!transaction) {
-      return res.status(400).json({ error: "Item not found" });
-    }
-    if (transaction.userId !== userId) {
-      return res.status(402).json({ error: "Forbidden" });
-    }
-    if (type && type !== "income" && type !== "expense") {
-      return res.status(400).json({ error: "Incorrect type" });
-    }
-
     const newDate = date ? new Date(date) : undefined;
 
     try {
+      const existTransaction = await prisma.transaction.findUnique({
+        where: { id },
+      });
+      if (!existTransaction) {
+        return res.status(400).json({ error: "Item not found" });
+      }
+      if (existTransaction.userId !== userId) {
+        return res.status(402).json({ error: "Forbidden" });
+      }
+      if (type && type !== "income" && type !== "expense") {
+        return res.status(400).json({ error: "Incorrect type" });
+      }
+
+      const newCategoryId = await categoryHandle(category, userId);
+
       const transaction = await prisma.transaction.update({
         where: { id },
         data: {
           name: name || undefined,
           date: newDate ? newDate.toISOString() : undefined,
           amount: amount ? parseInt(amount) : undefined,
-          category: category ? category.toLowerCase() : undefined,
+          categoryId: category ? newCategoryId : undefined,
           type: type || undefined,
+        },
+        include: {
+          category: { select: { name: true } },
         },
       });
 
@@ -103,21 +154,48 @@ const transactionController = {
         where: {
           userId,
         },
+        include: { category: { select: { name: true } } },
       });
 
-      const getCategories = await prisma.transaction.groupBy({
-        by: "category",
-        _sum: {
-          amount: true,
-        },
+      const getCategories = await prisma.category.findMany({
         where: { userId },
+        include: {
+          transactions: {
+            select: {
+              name: true,
+              amount: true,
+              type: true,
+            },
+          },
+        },
       });
 
-      const byMonth = await prisma.transaction.aggregateRaw({
+      // const getCategories = await prisma.transaction.groupBy({
+      //   by: "categoryId",
+      //   _sum: {
+      //     amount: true,
+      //   },
+      //   where: { userId },
+      // });
+
+      const totalExpenseByCategory = [];
+      getCategories.forEach((category) => {
+        totalExpenseByCategory.push({
+          total: category.transactions.reduce(
+            (a, b) => (b.type === "expense" ? a + b.amount : 0),
+            0
+          ),
+          category: category.name,
+          categoryId: category.id,
+        });
+      });
+
+      const totalExpenseByMonth = await prisma.transaction.aggregateRaw({
         pipeline: [
           {
             $match: {
               userId: { $oid: userId },
+              type: "expense",
             },
           },
           {
@@ -128,13 +206,13 @@ const transactionController = {
           },
         ],
       });
-      const categories = [];
-      getCategories.forEach((category) => {
-        categories.push({
-          total: category._sum.amount,
-          category: category.category,
-        });
-      });
+      // const categories = [];
+      // getCategories.forEach((category) => {
+      //   categories.push({
+      //     total: category._sum.amount,
+      //     category: category.category,
+      //   });
+      // });
       const newTransactions = [];
       transactions.forEach((item) => {
         newTransactions.push({
@@ -142,7 +220,12 @@ const transactionController = {
           date: format(new Date(item.date), "yyyy-MM-dd"),
         });
       });
-      res.json({ transactions: newTransactions, categories, byMonth });
+      res.json({
+        transactions: newTransactions,
+        totalExpenseByCategory,
+        totalExpenseByMonth,
+        // getCategories,
+      });
     } catch (error) {
       console.log(error);
       next(errorMessage(500, "Error in Get Transactions"));

@@ -8,7 +8,7 @@ import {
 } from "@nextui-org/react";
 import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
 
-type Props = {
+interface Props {
   name: string;
   label: string;
   placeholder?: string;
@@ -19,7 +19,7 @@ type Props = {
     key: string;
     label: string;
   }[];
-};
+}
 
 const FormSelect: React.FC<Props> = ({
   name,

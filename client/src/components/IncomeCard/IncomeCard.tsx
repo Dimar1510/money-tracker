@@ -1,11 +1,4 @@
-import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Divider,
-} from "@nextui-org/react";
+import { Card, CardBody, CardHeader } from "@nextui-org/react";
 
 const IncomeCard = () => {
   return (
@@ -13,13 +6,9 @@ const IncomeCard = () => {
       <CardHeader className="flex gap-3">
         <h2 className="text-md">Total income</h2>
       </CardHeader>
-      <Divider />
       <CardBody>
         <p>10000</p>
       </CardBody>
-      <CardFooter>
-        <Button>Add income</Button>
-      </CardFooter>
     </Card>
   );
 };

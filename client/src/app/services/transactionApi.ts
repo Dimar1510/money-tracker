@@ -4,8 +4,8 @@ import { api } from "./api";
 
 type GetTransactions = {
   transactions: Transaction[];
-  categories: Category[];
-  byMonth: ByMonth[];
+  totalExpenseByCategory: Category[];
+  totalExpenseByMonth: ByMonth[];
 };
 
 export const userApi = api.injectEndpoints({
