@@ -82,7 +82,6 @@ const FormSelect: React.FC<Props> = ({
           </SelectItem>
         )}
       </Select>
-      {name === "category" && <button type="button">+</button>}
     </div>
   );
 };

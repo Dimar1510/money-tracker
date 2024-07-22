@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "src/app/hooks";
+import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 import { selectCurrent, selectIsAuthenticated } from "src/app/userSlice";
 import BalanceCard from "src/components/BalanceCard/BalanceCard";
 import ExpenseCard from "src/components/ExpenseCard/ExpenseCard";
@@ -11,9 +12,6 @@ const Dashboard = () => {
   const isAuth = useAppSelector(selectIsAuthenticated);
   const current = useAppSelector(selectCurrent);
   const navigate = useNavigate();
-  const [currentBalance, setCurrentBalance] = useState(0);
-  const [income, setIncome] = useState(0);
-  const [expenses, setExpenses] = useState(0);
   useEffect(() => {
     if (!isAuth) {
       navigate("/");

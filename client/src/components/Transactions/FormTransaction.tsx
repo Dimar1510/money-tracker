@@ -14,10 +14,11 @@ import FormInput from "../ui/FormInput/FormInput";
 import { hasErrorField } from "src/utils/has-error-field";
 import { ITransaction } from "./Transactions";
 import FormSelect from "../ui/FormSelect/FormSelect";
-import FormDropdown from "../ui/FormDropdown/FormDropdown";
+import { useGetAllCategoriesQuery } from "src/app/services/categoryApi";
+import FormCategory from "../ui/FormAutocomplete/FormAutocomplete";
+import FormAutocomplete from "../ui/FormAutocomplete/FormAutocomplete";
 
 interface IProps {
-  remove: string[];
   error: string;
   setError: (err: string) => void;
   edit: string | null;
@@ -25,15 +26,10 @@ interface IProps {
   reset: () => void;
   handleSubmit: UseFormHandleSubmit<ITransaction, undefined>;
   control: Control<ITransaction, any>;
-  categories: {
-    key: string;
-    label: string;
-  }[];
   onClose: () => void;
 }
 
 const FormTransaction: FC<IProps> = ({
-  remove,
   error,
   setError,
   edit,
@@ -41,7 +37,6 @@ const FormTransaction: FC<IProps> = ({
   reset,
   handleSubmit,
   control,
-  categories,
   onClose,
 }) => {
   const [createTransaction] = useCreateTransactionMutation();
@@ -50,9 +45,14 @@ const FormTransaction: FC<IProps> = ({
   const onSubmit = async (data: ITransaction) => {
     try {
       if (edit) {
-        await updateTransaction({ itemData: { ...data }, id: edit }).unwrap();
+        await updateTransaction({
+          itemData: { ...data },
+          id: edit,
+        }).unwrap();
       } else {
-        await createTransaction({ itemData: data }).unwrap();
+        await createTransaction({
+          itemData: { ...data },
+        }).unwrap();
       }
       setEdit(null);
       reset();
@@ -97,6 +97,14 @@ const FormTransaction: FC<IProps> = ({
           type="number"
           required="Amount required"
         />
+
+        <FormAutocomplete
+          control={control}
+          name="category"
+          label="Category"
+          placeholder="Без категории"
+        />
+
         <FormInput
           control={control}
           name="date"
@@ -104,15 +112,6 @@ const FormTransaction: FC<IProps> = ({
           type="date"
           required="Date required"
         />
-
-        <FormSelect
-          control={control}
-          items={categories}
-          label="Category"
-          name="category"
-          required="Category required"
-        />
-
         <div>
           {edit ? (
             <div className="flex gap-2">

@@ -8,7 +8,7 @@ type GetTransactions = {
   totalExpenseByMonth: ByMonth[];
 };
 
-export const userApi = api.injectEndpoints({
+export const transactionApi = api.injectEndpoints({
   endpoints: (build) => ({
     createTransaction: build.mutation<Transaction, { itemData: ITransaction }>({
       query: ({ itemData }) => ({
@@ -53,7 +53,7 @@ export const {
   useCreateTransactionMutation,
   useDeleteTransactionMutation,
   useUpdateTransactionMutation,
-} = userApi;
+} = transactionApi;
 export const {
   endpoints: {
     createTransaction,
@@ -61,4 +61,4 @@ export const {
     deleteTransaction,
     updateTransaction,
   },
-} = userApi;
+} = transactionApi;

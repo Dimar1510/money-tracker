@@ -26,6 +26,7 @@ import { hasErrorField } from "src/utils/has-error-field";
 import FormTransaction from "./FormTransaction";
 import {
   Button,
+  Input,
   Modal,
   ModalBody,
   ModalContent,
@@ -34,6 +35,7 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import ErrorMessage from "../ui/error-message/ErrorMessage";
+import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
 
 const dateFormatter = (params: ValueFormatterParams): string => {
   return new Date(params.value).toLocaleDateString("ru-ru", {
@@ -61,17 +63,6 @@ export const TransactionsList = () => {
   const gridRef = useRef<AgGridReact>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  // load categories
-
-  const getCategories = data ? data.totalExpenseByCategory : [];
-  const categories: { key: string; label: string }[] = [
-    { key: "__other", label: "Другое" },
-  ];
-  getCategories.forEach((item) => {
-    if (item.category !== "__other")
-      categories.push({ key: item.category, label: item.category });
-  });
-
   const {
     handleSubmit,
     control,
@@ -82,7 +73,6 @@ export const TransactionsList = () => {
     reValidateMode: "onBlur",
     defaultValues: {
       type: "expense",
-      category: "__other",
     },
   });
 
@@ -111,8 +101,8 @@ export const TransactionsList = () => {
       setValue("name", node.data.name);
       setValue("date", node.data.date);
       setValue("amount", node.data.amount);
-      setValue("category", node.data.category.name);
       setValue("type", node.data.type);
+      setValue("category", node.data.category.name);
     };
 
     return (
@@ -124,6 +114,22 @@ export const TransactionsList = () => {
           <MdDeleteOutline />
         </button>
       </div>
+    );
+  };
+
+  const TypeCellRenderer: FunctionComponent<CustomCellRendererProps> = ({
+    node,
+  }) => {
+    return node.data.type === "income" ? (
+      <span className="flex items-center gap-1">
+        Доход
+        <FaLongArrowAltUp className="text-success-600" />
+      </span>
+    ) : (
+      <span className="flex items-center gap-1">
+        Расход
+        <FaLongArrowAltDown className="text-danger-800" />
+      </span>
     );
   };
 
@@ -142,13 +148,7 @@ export const TransactionsList = () => {
       field: "type",
       minWidth: 50,
       flex: 1,
-      cellEditor: "agSelectCellEditor",
-      cellEditorParams: {
-        values: ["income", "expense"],
-      },
-      valueFormatter: (params: ValueFormatterParams) => {
-        return params.value === "income" ? "доход" : "расход";
-      },
+      cellRenderer: TypeCellRenderer,
     },
     {
       headerName: "Amount",
@@ -165,12 +165,10 @@ export const TransactionsList = () => {
       field: "category",
       minWidth: 50,
       flex: 1,
-      cellEditor: "agSelectCellEditor",
-      cellEditorParams: {
-        values: categories,
-      },
       valueFormatter: (params: ValueFormatterParams) => {
-        return params.value.name === "__other" ? "Другое" : params.value.name;
+        return params.value.name === "__other"
+          ? "Без категории"
+          : params.value.name;
       },
     },
     {
@@ -205,7 +203,7 @@ export const TransactionsList = () => {
     );
   }, []);
 
-  const sortGrid = (event: GridReadyEvent, field: string, sortDir: "desc") => {
+  const sortGrid = (event: GridReadyEvent, field: string, sortDir: "asc") => {
     const columnState = {
       state: [
         {
@@ -237,36 +235,39 @@ export const TransactionsList = () => {
     localeText: AG_GRID_LOCALE_RU,
     columnDefs,
     onGridReady: function (event: GridReadyEvent) {
-      console.log("The grid is now ready", event);
-      sortGrid(event, "date", "desc");
+      sortGrid(event, "date", "asc");
     },
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col gap-3">
       <ErrorMessage error={error} />
-      <Button
-        onPress={() => {
-          onOpen();
-          formReset();
-          setEdit(null);
-        }}
-      >
-        Добавить транзакцию
-      </Button>
-      {remove.length > 0 && (
-        <Button onClick={handleDeleteMany}>Delete {remove.length} items</Button>
-      )}
+      <div className="flex justify-between">
+        <Button
+          onPress={() => {
+            onOpen();
+            formReset();
+            setEdit(null);
+          }}
+        >
+          Добавить транзакцию
+        </Button>
+        {/* <Button>Категории</Button> */}
+      </div>
 
-      <div className="example-header">
-        <span>Quick Filter:</span>
-        <input
+      <div className="flex justify-between">
+        <Input
           type="text"
           id="filter-text-box"
-          placeholder="Filter..."
+          placeholder="Quick search"
           onInput={onFilterTextBoxChanged}
+          className="w-[200px]"
         />
+        {remove.length > 0 && (
+          <Button onClick={handleDeleteMany}>Удалить: {remove.length}</Button>
+        )}
       </div>
+
       <div className="ag-theme-quartz w-full h-full">
         <AgGridReact
           ref={gridRef}
@@ -287,7 +288,6 @@ export const TransactionsList = () => {
               </ModalHeader>
               <ModalBody>
                 <FormTransaction
-                  remove={remove}
                   edit={edit}
                   error={error}
                   setEdit={setEdit}
@@ -295,7 +295,6 @@ export const TransactionsList = () => {
                   control={control}
                   handleSubmit={handleSubmit}
                   reset={reset}
-                  categories={categories}
                   onClose={onClose}
                 />
               </ModalBody>

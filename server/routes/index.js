@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { UserController, TransactionController } = require("../controllers");
+const {
+  UserController,
+  TransactionController,
+  CategoryController,
+} = require("../controllers");
 const { authenticateToken } = require("../middleware/auth");
 
 router.post("/register", UserController.register);
@@ -27,5 +31,7 @@ router.put(
   authenticateToken,
   TransactionController.updateTransaction
 );
+
+router.get("/categories", authenticateToken, CategoryController.getCategories);
 
 module.exports = router;

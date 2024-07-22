@@ -5,15 +5,15 @@ const { format } = require("date-fns");
 const categoryHandle = async (category, userId) => {
   let newCategoryId;
   try {
-    if (category) {
+    if (category.trim()) {
       const findCategory = await prisma.category.findFirst({
-        where: { AND: [{ userId }, { name: category.toLowerCase() }] },
+        where: { AND: [{ userId }, { name: category.toLowerCase().trim() }] },
       });
 
       if (!findCategory) {
         const createCategory = await prisma.category.create({
           data: {
-            name: category.toLowerCase(),
+            name: category.toLowerCase().trim(),
             userId,
           },
         });
@@ -170,14 +170,6 @@ const transactionController = {
         },
       });
 
-      // const getCategories = await prisma.transaction.groupBy({
-      //   by: "categoryId",
-      //   _sum: {
-      //     amount: true,
-      //   },
-      //   where: { userId },
-      // });
-
       const totalExpenseByCategory = [];
       getCategories.forEach((category) => {
         totalExpenseByCategory.push({
@@ -206,13 +198,7 @@ const transactionController = {
           },
         ],
       });
-      // const categories = [];
-      // getCategories.forEach((category) => {
-      //   categories.push({
-      //     total: category._sum.amount,
-      //     category: category.category,
-      //   });
-      // });
+
       const newTransactions = [];
       transactions.forEach((item) => {
         newTransactions.push({
@@ -224,7 +210,6 @@ const transactionController = {
         transactions: newTransactions,
         totalExpenseByCategory,
         totalExpenseByMonth,
-        // getCategories,
       });
     } catch (error) {
       console.log(error);
