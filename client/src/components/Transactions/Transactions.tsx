@@ -1,13 +1,14 @@
 import {
   FunctionComponent,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
 } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
+import "ag-grid-community/styles/ag-theme-material.css";
 import {
   ColDef,
   ValueFormatterParams,
@@ -36,6 +37,7 @@ import {
 } from "@nextui-org/react";
 import ErrorMessage from "../ui/error-message/ErrorMessage";
 import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
+import { ThemeContext } from "../ThemeProvider";
 
 const dateFormatter = (params: ValueFormatterParams): string => {
   return new Date(params.value).toLocaleDateString("ru-ru", {
@@ -62,7 +64,7 @@ export const TransactionsList = () => {
   const [remove, setRemove] = useState<string[]>([]);
   const gridRef = useRef<AgGridReact>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-
+  const { theme, toggleTheme } = useContext(ThemeContext);
   const {
     handleSubmit,
     control,
@@ -122,13 +124,13 @@ export const TransactionsList = () => {
   }) => {
     return node.data.type === "income" ? (
       <span className="flex items-center gap-1">
-        Доход
         <FaLongArrowAltUp className="text-success-600" />
+        Доход
       </span>
     ) : (
       <span className="flex items-center gap-1">
-        Расход
         <FaLongArrowAltDown className="text-danger-800" />
+        Расход
       </span>
     );
   };
@@ -252,7 +254,6 @@ export const TransactionsList = () => {
         >
           Добавить транзакцию
         </Button>
-        {/* <Button>Категории</Button> */}
       </div>
 
       <div className="flex justify-between">
@@ -268,7 +269,11 @@ export const TransactionsList = () => {
         )}
       </div>
 
-      <div className="ag-theme-quartz w-full h-full">
+      <div
+        className={`${
+          theme === "dark" ? "ag-theme-material-dark" : "ag-theme-material"
+        } w-full h-full`}
+      >
         <AgGridReact
           ref={gridRef}
           rowSelection="multiple"
@@ -279,7 +284,11 @@ export const TransactionsList = () => {
           onSelectionChanged={onSelectionChanged}
         />
       </div>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        className={`${theme} text-foreground`}
+      >
         <ModalContent>
           {(onClose) => (
             <>

@@ -28,6 +28,6 @@ h2 {
 h3 {
   @apply text-xl font-semibold;
 }
-/* main {
-    min-height: 100vh;
-  } */
+main {
+  min-height: 100vh;
+}

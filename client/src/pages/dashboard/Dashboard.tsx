@@ -20,14 +20,14 @@ const Dashboard = () => {
 
   if (current)
     return (
-      <main className="flex gap-8 p-8">
+      <div className="flex gap-8 p-8">
         <div className="flex flex-col gap-6 min-w-[280px]">
           <BalanceCard />
           <IncomeCard />
           <ExpenseCard />
         </div>
         <TransactionsList />
-      </main>
+      </div>
     );
 };
 
