@@ -14,6 +14,7 @@ import {
   ValueFormatterParams,
   SelectionChangedEvent,
   GridReadyEvent,
+  _capitalise,
 } from "ag-grid-community";
 import {
   useDeleteTransactionMutation,
@@ -104,7 +105,10 @@ export const TransactionsList = () => {
       setValue("date", node.data.date);
       setValue("amount", node.data.amount);
       setValue("type", node.data.type);
-      setValue("category", node.data.category.name);
+      setValue(
+        "category",
+        node.data.category.name === "__other" ? "" : node.data.category.name
+      );
     };
 
     return (
@@ -170,7 +174,7 @@ export const TransactionsList = () => {
       valueFormatter: (params: ValueFormatterParams) => {
         return params.value.name === "__other"
           ? "Без категории"
-          : params.value.name;
+          : _capitalise(params.value.name);
       },
     },
     {

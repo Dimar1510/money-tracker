@@ -22,8 +22,8 @@ const categoryHandle = async (category, userId) => {
         newCategoryId = findCategory.id;
       }
     } else {
-      const nameless = await prisma.category.findUnique({
-        where: { name: "__other" },
+      const nameless = await prisma.category.findFirst({
+        where: { AND: [{ userId }, { name: "__other" }] },
       });
       if (!nameless) {
         const createNameless = await prisma.category.create({
@@ -191,9 +191,25 @@ const transactionController = {
             },
           },
           {
+            $lookup: {
+              let: { catObjId: { $toObjectId: "$categoryId" } },
+              from: "Category",
+              pipeline: [
+                { $match: { $expr: { $eq: ["$_id", "$$catObjId"] } } },
+              ],
+              as: "category",
+            },
+          },
+          {
             $group: {
               _id: { $dateToString: { format: "%Y-%m", date: "$date" } },
               total: { $sum: "$amount" },
+              categories: {
+                $addToSet: {
+                  name: { $first: "$category.name" },
+                  total: { $sum: "$amount" },
+                },
+              },
             },
           },
         ],

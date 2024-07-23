@@ -1,4 +1,5 @@
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
+import { _capitalise } from "ag-grid-community";
 import { Control, useController } from "react-hook-form";
 import {
   ICategory,
@@ -58,7 +59,9 @@ const FormAutocomplete: React.FC<Props> = ({
         aria-hidden={false}
       >
         {(item) => (
-          <AutocompleteItem key={item.name}>{item.name}</AutocompleteItem>
+          <AutocompleteItem key={item.name}>
+            {_capitalise(item.name)}
+          </AutocompleteItem>
         )}
       </Autocomplete>
     );

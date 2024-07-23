@@ -5,6 +5,7 @@ import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 import { useGetAllCategoriesQuery } from "src/app/services/categoryApi";
 import { Card } from "@nextui-org/react";
 import { ThemeContext } from "../ThemeProvider";
+import { _capitalise } from "ag-grid-community";
 
 const ByCategory = () => {
   const { data } = useGetAllCategoriesQuery();
@@ -21,7 +22,10 @@ const ByCategory = () => {
             (a, b) => (b.type === "expense" ? a + b.amount : a),
             0
           ),
-          category: category.name,
+          category:
+            category.name === "__other"
+              ? "Без категории"
+              : _capitalise(category.name),
         });
     });
     return totalExpenseByCategory;
@@ -40,13 +44,13 @@ const ByCategory = () => {
             0
           ),
           category:
-            category.name === "__other" ? "Без категории" : category.name,
+            category.name === "__other"
+              ? "Без категории"
+              : _capitalise(category.name),
         });
     });
     return totalIncomeByCategory;
   }, [data]);
-
-  console.log(incomeChartData());
 
   const optionsExpense: AgChartOptions = {
     data: expenseChartData(),
@@ -55,9 +59,7 @@ const ByCategory = () => {
     },
     theme: theme === "dark" ? "ag-default-dark" : "ag-default",
     background: { visible: false },
-    legend: {
-      position: "right",
-    },
+
     series: [
       {
         type: "donut",
@@ -75,9 +77,7 @@ const ByCategory = () => {
     },
     theme: theme === "dark" ? "ag-default-dark" : "ag-default",
     background: { visible: false },
-    legend: {
-      position: "right",
-    },
+
     series: [
       {
         type: "donut",

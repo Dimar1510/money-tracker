@@ -31,4 +31,5 @@ export type Category = {
 export type ByMonth = {
   _id: string;
   total: number;
+  categories: { name: string; total: number }[];
 };
