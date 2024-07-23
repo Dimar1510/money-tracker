@@ -15,7 +15,7 @@ const IncomeCard = () => {
         <h3 className="text-md">Доходы за все время</h3>
       </CardHeader>
       <CardBody>
-        <p>{income}</p>
+        <p>₽ {income}</p>
       </CardBody>
     </Card>
   );

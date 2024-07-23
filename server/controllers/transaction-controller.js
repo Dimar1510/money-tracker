@@ -53,6 +53,9 @@ const transactionController = {
     if (type !== "income" && type !== "expense") {
       return res.status(400).json({ error: "Incorrect type" });
     }
+    if (amount < 1) {
+      return res.status(400).json({ error: "Amount can't be 0 or less" });
+    }
     const newDate = new Date(date);
     const userId = req.user.userId;
     try {
@@ -122,6 +125,9 @@ const transactionController = {
       }
       if (type && type !== "income" && type !== "expense") {
         return res.status(400).json({ error: "Incorrect type" });
+      }
+      if (amount < 1) {
+        return res.status(400).json({ error: "Amount can't be 0 or less" });
       }
 
       const newCategoryId = await categoryHandle(category, userId);

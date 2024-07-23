@@ -2,7 +2,6 @@ import {
   FunctionComponent,
   useCallback,
   useContext,
-  useEffect,
   useRef,
   useState,
 } from "react";
@@ -10,8 +9,6 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import {
-  ColDef,
-  ValueFormatterParams,
   SelectionChangedEvent,
   GridReadyEvent,
   _capitalise,
@@ -32,22 +29,12 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import ErrorMessage from "../ui/error-message/ErrorMessage";
 import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
 import { ThemeContext } from "../ThemeProvider";
-
-const dateFormatter = (params: ValueFormatterParams): string => {
-  return new Date(params.value).toLocaleDateString("ru-ru", {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-};
+import { columnDefs } from "./columnDefs";
 
 export interface ITransaction {
   name: string;
@@ -66,22 +53,13 @@ export const TransactionsList = () => {
   const gridRef = useRef<AgGridReact>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const {
-    handleSubmit,
-    control,
-    setValue,
-    reset: formReset,
-  } = useForm<ITransaction>({
+  const { handleSubmit, control, setValue, reset } = useForm<ITransaction>({
     mode: "onChange",
     reValidateMode: "onBlur",
     defaultValues: {
       type: "expense",
     },
   });
-
-  const reset = () => {
-    formReset();
-  };
 
   const ActionsCellRenderer: FunctionComponent<CustomCellRendererProps> = ({
     node,
@@ -139,60 +117,6 @@ export const TransactionsList = () => {
     );
   };
 
-  const columnDefs: ColDef[] = [
-    {
-      headerName: "Название",
-      field: "name",
-      minWidth: 150,
-      flex: 1,
-      filter: true,
-      headerCheckboxSelection: true,
-      checkboxSelection: true,
-    },
-    {
-      headerName: "Тип",
-      field: "type",
-      minWidth: 100,
-      flex: 1,
-      cellRenderer: TypeCellRenderer,
-    },
-    {
-      headerName: "Сумма",
-      field: "amount",
-      minWidth: 150,
-      flex: 1,
-      filter: "agNumberColumnFilter",
-      valueFormatter: (params: ValueFormatterParams) => {
-        return "₽ " + params.value.toLocaleString();
-      },
-    },
-    {
-      headerName: "Категория",
-      field: "category",
-      minWidth: 150,
-      flex: 1,
-      valueFormatter: (params: ValueFormatterParams) => {
-        return params.value.name === "__other"
-          ? "Без категории"
-          : _capitalise(params.value.name);
-      },
-    },
-    {
-      headerName: "Дата",
-      field: "date",
-      minWidth: 150,
-      flex: 1,
-      filter: "agDateColumnFilter",
-      valueFormatter: dateFormatter,
-    },
-    {
-      field: "",
-      cellRenderer: ActionsCellRenderer,
-      width: 80,
-      resizable: false,
-    },
-  ];
-
   const onSelectionChanged = (event: SelectionChangedEvent) => {
     const rowCount = event.api.getSelectedNodes();
     const ids: Set<string> = new Set();
@@ -239,7 +163,7 @@ export const TransactionsList = () => {
       sortable: true,
     },
     localeText: AG_GRID_LOCALE_RU,
-    columnDefs,
+    columnDefs: columnDefs({ ActionsCellRenderer, TypeCellRenderer }),
     onGridReady: function (event: GridReadyEvent) {
       sortGrid(event, "date", "asc");
     },
@@ -247,13 +171,13 @@ export const TransactionsList = () => {
 
   return (
     <div className="w-full flex flex-col gap-3 flex-1">
-      <ErrorMessage error={error} />
       <div className="flex justify-between">
         <Button
           onPress={() => {
             onOpen();
-            formReset();
+            reset();
             setEdit(null);
+            setError("");
           }}
           startContent={<MdAdd />}
         >
@@ -284,7 +208,7 @@ export const TransactionsList = () => {
         <AgGridReact
           ref={gridRef}
           rowSelection="multiple"
-          columnDefs={columnDefs}
+          columnDefs={columnDefs({ ActionsCellRenderer, TypeCellRenderer })}
           rowData={data?.transactions}
           gridOptions={gridOptions}
           suppressRowClickSelection={true}

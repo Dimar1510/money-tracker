@@ -32,6 +32,8 @@ const FormInput: React.FC<Props> = ({
     control,
     rules: {
       required,
+      min: 1,
+      maxLength: 16,
     },
     defaultValue: "",
   });
@@ -47,7 +49,6 @@ const FormInput: React.FC<Props> = ({
       onChange={field.onChange}
       onBlur={field.onBlur}
       errorMessage={`${errors[name]?.message ?? ""}`}
-      maxLength={16}
       autoComplete="input"
       ref={field.ref}
       className={className}

@@ -1,7 +1,6 @@
 import { useCallback, useContext } from "react";
 import { AgCharts } from "ag-charts-react";
 import { AgChartOptions } from "ag-charts-community";
-import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 import { useGetAllCategoriesQuery } from "src/app/services/categoryApi";
 import { Card } from "@nextui-org/react";
 import { ThemeContext } from "../ThemeProvider";

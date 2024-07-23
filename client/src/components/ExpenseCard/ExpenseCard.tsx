@@ -18,7 +18,7 @@ const ExpenseCard = () => {
           <h3 className="text-md">Расходы за все время</h3>
         </CardHeader>
         <CardBody>
-          <p>{expense}</p>
+          <p>₽ {expense}</p>
         </CardBody>
       </Card>
     </>

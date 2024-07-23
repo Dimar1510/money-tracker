@@ -1,8 +1,7 @@
 import { AgCharts } from "ag-charts-react";
 import { AgChartOptions } from "ag-charts-types";
 import { _capitalise } from "ag-grid-community";
-import React, { useCallback, useContext } from "react";
-import { useGetAllCategoriesQuery } from "src/app/services/categoryApi";
+import { useCallback, useContext } from "react";
 import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 import { format, setDefaultOptions } from "date-fns";
 import { ru } from "date-fns/locale";
@@ -19,14 +18,19 @@ interface ISeries {
   normalizedTo?: number;
 }
 
+interface IMonth {
+  month: string;
+  [key: string]: string | number;
+}
+
 const ByMonth = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { data: transactions } = useGetAllTransactionsQuery();
 
   const expenseChartData = useCallback(() => {
-    const chartData: { month: string; [key: string]: string | number }[] = [];
+    const chartData: IMonth[] = [];
     transactions?.totalExpenseByMonth.forEach((item) => {
-      const newMonth: { month: string; [key: string]: string | number } = {
+      const newMonth: IMonth = {
         month: item._id,
       };
       item.categories.forEach((category) => {

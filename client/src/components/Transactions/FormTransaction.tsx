@@ -1,21 +1,17 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import {
   useCreateTransactionMutation,
-  useDeleteTransactionMutation,
-  useGetAllTransactionsQuery,
   useUpdateTransactionMutation,
 } from "src/app/services/transactionApi";
 import { Button } from "@nextui-org/react";
 import ErrorMessage from "../ui/error-message/ErrorMessage";
-import { Control, UseFormHandleSubmit, useForm } from "react-hook-form";
+import { Control, UseFormHandleSubmit } from "react-hook-form";
 import FormInput from "../ui/FormInput/FormInput";
 import { hasErrorField } from "src/utils/has-error-field";
 import { ITransaction } from "./Transactions";
 import FormSelect from "../ui/FormSelect/FormSelect";
-import { useGetAllCategoriesQuery } from "src/app/services/categoryApi";
-import FormCategory from "../ui/FormAutocomplete/FormAutocomplete";
 import FormAutocomplete from "../ui/FormAutocomplete/FormAutocomplete";
 
 interface IProps {
@@ -78,7 +74,7 @@ const FormTransaction: FC<IProps> = ({
           name="name"
           label="Name"
           type="text"
-          required="Name required"
+          required="Введите название"
         />
         <FormSelect
           control={control}
@@ -88,14 +84,14 @@ const FormTransaction: FC<IProps> = ({
           ]}
           label="Type"
           name="type"
-          required="Type required"
+          required="Указать тип"
         />
         <FormInput
           control={control}
           name="amount"
           label="Amount"
           type="number"
-          required="Amount required"
+          required="Указать количество"
         />
 
         <FormAutocomplete
@@ -110,23 +106,11 @@ const FormTransaction: FC<IProps> = ({
           name="date"
           label="Date"
           type="date"
-          required="Date required"
+          required="Указать дату"
         />
         <div>
           {edit ? (
             <div className="flex gap-2">
-              {/* <Button
-                type="button"
-                className="w-full"
-                color="primary"
-                onClick={() => {
-                  reset();
-                  setEdit(null);
-                  onClose();
-                }}
-              >
-                Cancel
-              </Button> */}
               <Button type="submit" className="w-full" color="primary">
                 Сохранить
               </Button>

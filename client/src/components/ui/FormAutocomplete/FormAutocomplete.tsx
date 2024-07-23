@@ -30,6 +30,7 @@ const FormAutocomplete: React.FC<Props> = ({
     control,
     rules: {
       required,
+      maxLength: 16,
     },
     defaultValue: "",
   });

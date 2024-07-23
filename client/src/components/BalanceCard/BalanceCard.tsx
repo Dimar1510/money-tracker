@@ -17,7 +17,7 @@ const BalanceCard = () => {
         <h3 className="text-md">Отслеживаемый баланс</h3>
       </CardHeader>
       <CardBody>
-        <p>{balance}</p>
+        <p>₽ {balance}</p>
       </CardBody>
     </Card>
   );
