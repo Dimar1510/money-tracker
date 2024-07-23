@@ -132,7 +132,7 @@ const transactionController = {
           name: name || undefined,
           date: newDate ? newDate.toISOString() : undefined,
           amount: amount ? parseInt(amount) : undefined,
-          categoryId: category ? newCategoryId : undefined,
+          categoryId: newCategoryId,
           type: type || undefined,
         },
         include: {

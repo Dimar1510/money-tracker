@@ -33,5 +33,15 @@ router.put(
 );
 
 router.get("/categories", authenticateToken, CategoryController.getCategories);
+router.put(
+  "/categories/:id",
+  authenticateToken,
+  CategoryController.updateCategory
+);
+router.delete(
+  "/categories/:id",
+  authenticateToken,
+  CategoryController.deleteCategory
+);
 
 module.exports = router;
