@@ -8,7 +8,7 @@ import {
 } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-material.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
 import {
   ColDef,
   ValueFormatterParams,
@@ -21,7 +21,7 @@ import {
 } from "src/app/services/transactionApi";
 import { AG_GRID_LOCALE_RU } from "src/utils/locale.ru";
 import type { CustomCellRendererProps } from "@ag-grid-community/react";
-import { MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
+import { MdAdd, MdDeleteOutline, MdOutlineEdit } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { hasErrorField } from "src/utils/has-error-field";
 import FormTransaction from "./FormTransaction";
@@ -109,11 +109,11 @@ export const TransactionsList = () => {
 
     return (
       <div className="flex gap-4 items-center justify-center h-full">
-        <button onClick={onEditClick}>
-          <MdOutlineEdit />
+        <button onClick={onEditClick} className="hover:text-primary">
+          <MdOutlineEdit size={20} />
         </button>
-        <button onClick={onRemoveClick}>
-          <MdDeleteOutline />
+        <button onClick={onRemoveClick} className="hover:text-danger-500">
+          <MdDeleteOutline size={20} />
         </button>
       </div>
     );
@@ -137,25 +137,25 @@ export const TransactionsList = () => {
 
   const columnDefs: ColDef[] = [
     {
-      headerName: "Name",
+      headerName: "Название",
       field: "name",
-      minWidth: 50,
+      minWidth: 150,
       flex: 1,
       filter: true,
       headerCheckboxSelection: true,
       checkboxSelection: true,
     },
     {
-      headerName: "Type",
+      headerName: "Тип",
       field: "type",
-      minWidth: 50,
+      minWidth: 100,
       flex: 1,
       cellRenderer: TypeCellRenderer,
     },
     {
-      headerName: "Amount",
+      headerName: "Сумма",
       field: "amount",
-      minWidth: 50,
+      minWidth: 150,
       flex: 1,
       filter: "agNumberColumnFilter",
       valueFormatter: (params: ValueFormatterParams) => {
@@ -163,9 +163,9 @@ export const TransactionsList = () => {
       },
     },
     {
-      headerName: "Category",
+      headerName: "Категория",
       field: "category",
-      minWidth: 50,
+      minWidth: 150,
       flex: 1,
       valueFormatter: (params: ValueFormatterParams) => {
         return params.value.name === "__other"
@@ -174,9 +174,9 @@ export const TransactionsList = () => {
       },
     },
     {
-      headerName: "Date",
+      headerName: "Дата",
       field: "date",
-      minWidth: 50,
+      minWidth: 150,
       flex: 1,
       filter: "agDateColumnFilter",
       valueFormatter: dateFormatter,
@@ -242,7 +242,7 @@ export const TransactionsList = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-3">
+    <div className="w-full flex flex-col gap-3 flex-1">
       <ErrorMessage error={error} />
       <div className="flex justify-between">
         <Button
@@ -251,6 +251,7 @@ export const TransactionsList = () => {
             formReset();
             setEdit(null);
           }}
+          startContent={<MdAdd />}
         >
           Добавить транзакцию
         </Button>
@@ -260,19 +261,21 @@ export const TransactionsList = () => {
         <Input
           type="text"
           id="filter-text-box"
-          placeholder="Quick search"
+          placeholder="Быстрый поиск..."
           onInput={onFilterTextBoxChanged}
           className="w-[200px]"
         />
         {remove.length > 0 && (
-          <Button onClick={handleDeleteMany}>Удалить: {remove.length}</Button>
+          <Button onClick={handleDeleteMany} startContent={<MdDeleteOutline />}>
+            Удалить: {remove.length}
+          </Button>
         )}
       </div>
 
       <div
         className={`${
-          theme === "dark" ? "ag-theme-material-dark" : "ag-theme-material"
-        } w-full h-full`}
+          theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine"
+        } w-full h-[400px]`}
       >
         <AgGridReact
           ref={gridRef}
@@ -293,7 +296,16 @@ export const TransactionsList = () => {
           {(onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
-                {edit ? "Редактировать " : "Создать "} транзакцию
+                {edit ? (
+                  <div className="flex gap-1 items-center">
+                    <MdOutlineEdit /> Редактировать транзакцию
+                  </div>
+                ) : (
+                  <div className="flex gap-1 items-center">
+                    <MdAdd />
+                    Создать транзакцию
+                  </div>
+                )}
               </ModalHeader>
               <ModalBody>
                 <FormTransaction

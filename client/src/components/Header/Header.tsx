@@ -12,7 +12,7 @@ const Header = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const themeSelected = theme === "light";
   return (
-    <header className="bg-default-50 shadow-md">
+    <header className="bg-default-50 shadow-md w-full">
       <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
         <NavLink to={"/"}>
           <h1 className="font-bold text-sm xs:text-medium sm:text-xl flex flex-wrap">

@@ -25,14 +25,14 @@ export default {
         dark: {
           colors: {
             content1: "#242524",
-            primary: "#00ADB5",
-            background: "#333333",
+            primary: "#923eb9",
+            background: "#242424",
             secondary: "#f91880",
           },
         },
         light: {
           colors: {
-            primary: "#ff8c00",
+            primary: "#63b1ff",
             background: "#EFEFEF",
             secondary: "#f91880",
           },

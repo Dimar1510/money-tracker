@@ -115,7 +115,7 @@ const FormTransaction: FC<IProps> = ({
         <div>
           {edit ? (
             <div className="flex gap-2">
-              <Button
+              {/* <Button
                 type="button"
                 className="w-full"
                 color="primary"
@@ -126,14 +126,14 @@ const FormTransaction: FC<IProps> = ({
                 }}
               >
                 Cancel
-              </Button>
+              </Button> */}
               <Button type="submit" className="w-full" color="primary">
-                Save
+                Сохранить
               </Button>
             </div>
           ) : (
             <Button type="submit" className="w-full" color="primary">
-              Add
+              Добавить
             </Button>
           )}
         </div>
