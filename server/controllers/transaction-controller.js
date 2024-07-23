@@ -174,7 +174,7 @@ const transactionController = {
       getCategories.forEach((category) => {
         totalExpenseByCategory.push({
           total: category.transactions.reduce(
-            (a, b) => (b.type === "expense" ? a + b.amount : 0),
+            (a, b) => (b.type === "expense" ? a + b.amount : a),
             0
           ),
           category: category.name,

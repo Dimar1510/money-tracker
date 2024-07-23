@@ -7,7 +7,15 @@ const categoryController = {
     try {
       const categories = await prisma.category.findMany({
         where: { userId },
-        select: { name: true },
+        include: {
+          transactions: {
+            select: {
+              name: true,
+              amount: true,
+              type: true,
+            },
+          },
+        },
       });
 
       res.json(categories);

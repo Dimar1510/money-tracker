@@ -16,7 +16,7 @@ export const transactionApi = api.injectEndpoints({
         method: "POST",
         body: itemData,
       }),
-      invalidatesTags: ["transaction"],
+      invalidatesTags: ["transaction", "category"],
     }),
     updateTransaction: build.mutation<
       Transaction,
@@ -27,7 +27,7 @@ export const transactionApi = api.injectEndpoints({
         method: "PUT",
         body: itemData,
       }),
-      invalidatesTags: ["transaction"],
+      invalidatesTags: ["transaction", "category"],
     }),
     getAllTransactions: build.query<GetTransactions, void>({
       query: () => ({

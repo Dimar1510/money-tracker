@@ -4,6 +4,7 @@ import { useAppSelector } from "src/app/hooks";
 import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 import { selectCurrent, selectIsAuthenticated } from "src/app/userSlice";
 import BalanceCard from "src/components/BalanceCard/BalanceCard";
+import ByCategory from "src/components/Charts/ByCategory";
 import ExpenseCard from "src/components/ExpenseCard/ExpenseCard";
 import IncomeCard from "src/components/IncomeCard/IncomeCard";
 import TransactionsList from "src/components/Transactions/Transactions";
@@ -26,6 +27,7 @@ const Dashboard = () => {
           <IncomeCard />
           <ExpenseCard />
         </div>
+        <ByCategory />
         <TransactionsList />
       </div>
     );

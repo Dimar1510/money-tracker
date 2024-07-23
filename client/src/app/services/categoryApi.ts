@@ -4,6 +4,9 @@ import { api } from "./api";
 
 export interface ICategory {
   name: string;
+  id: string;
+  userId: string;
+  transactions: { amount: number; name: string; type: string }[];
 }
 
 export const categoryApi = api.injectEndpoints({
