@@ -25,7 +25,7 @@ export default {
         dark: {
           colors: {
             content1: "#242524",
-            primary: "#923eb9",
+            primary: "#ff9900",
             background: "#242424",
             secondary: "#f91880",
           },

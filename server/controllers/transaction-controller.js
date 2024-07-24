@@ -163,32 +163,32 @@ const transactionController = {
         include: { category: { select: { name: true } } },
       });
 
-      const getCategories = await prisma.category.findMany({
-        where: { userId },
-        include: {
-          transactions: {
-            select: {
-              name: true,
-              amount: true,
-              type: true,
-            },
-          },
-        },
-      });
+      // const getCategories = await prisma.category.findMany({
+      //   where: { userId },
+      //   include: {
+      //     transactions: {
+      //       select: {
+      //         name: true,
+      //         amount: true,
+      //         type: true,
+      //       },
+      //     },
+      //   },
+      // });
 
-      const totalExpenseByCategory = [];
-      getCategories.forEach((category) => {
-        totalExpenseByCategory.push({
-          total: category.transactions.reduce(
-            (a, b) => (b.type === "expense" ? a + b.amount : a),
-            0
-          ),
-          category: category.name,
-          categoryId: category.id,
-        });
-      });
+      // const totalExpenseByCategory = [];
+      // getCategories.forEach((category) => {
+      //   totalExpenseByCategory.push({
+      //     total: category.transactions.reduce(
+      //       (a, b) => (b.type === "expense" ? a + b.amount : a),
+      //       0
+      //     ),
+      //     category: category.name,
+      //     categoryId: category.id,
+      //   });
+      // });
 
-      const totalExpenseByMonth = await prisma.transaction.aggregateRaw({
+      const totalExpenseByYear = await prisma.transaction.aggregateRaw({
         pipeline: [
           {
             $match: {
@@ -208,12 +208,16 @@ const transactionController = {
           },
           {
             $group: {
-              _id: { $dateToString: { format: "%Y-%m", date: "$date" } },
+              _id: { $dateToString: { format: "%Y", date: "$date" } },
               total: { $sum: "$amount" },
-              categories: {
+              months: {
                 $addToSet: {
-                  name: { $first: "$category.name" },
+                  month: { $dateToString: { format: "%Y-%m", date: "$date" } },
                   total: { $sum: "$amount" },
+                  categories: {
+                    name: { $first: "$category.name" },
+                    total: { $sum: "$amount" },
+                  },
                 },
               },
             },
@@ -230,8 +234,7 @@ const transactionController = {
       });
       res.json({
         transactions: newTransactions,
-        totalExpenseByCategory,
-        totalExpenseByMonth,
+        totalExpenseByYear,
       });
     } catch (error) {
       console.log(error);

@@ -7,7 +7,11 @@ import { format, setDefaultOptions } from "date-fns";
 import { ru } from "date-fns/locale";
 import { ThemeContext } from "../ThemeProvider";
 import { Card } from "@nextui-org/react";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 setDefaultOptions({ locale: ru });
+import { settings } from "./SliderSettings";
 
 interface ISeries {
   type: "bar";
@@ -23,75 +27,87 @@ interface IMonth {
   [key: string]: string | number;
 }
 
+interface IYear {
+  year: string;
+  months: IMonth[];
+  series: ISeries[];
+}
+
 const ByMonth = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { data: transactions } = useGetAllTransactionsQuery();
 
   const expenseChartData = useCallback(() => {
-    const chartData: IMonth[] = [];
-    transactions?.totalExpenseByMonth.forEach((item) => {
-      const newMonth: IMonth = {
-        month: item._id,
+    const chartData: IYear[] = [];
+    transactions?.totalExpenseByYear.forEach((year) => {
+      const newYear: IYear = {
+        year: year._id,
+        months: [],
+        series: [],
       };
-      item.categories.forEach((category) => {
-        newMonth[category.name] = category.total;
+      year.months.forEach((month) => {
+        const existMonth = newYear.months.find(
+          (item) => item.month === month.month
+        );
+        if (existMonth) {
+          existMonth[month.categories.name] = month.categories.total;
+        } else {
+          const newMonth: IMonth = {
+            month: month.month,
+          };
+
+          newMonth[month.categories.name] = month.categories.total;
+
+          newYear.months.push(newMonth);
+        }
+
+        const existCategory = newYear.series.find(
+          (item) => item.yKey === month.categories.name
+        );
+        if (!existCategory) {
+          newYear.series.push({
+            type: "bar",
+            xKey: "month",
+            yKey: month.categories.name,
+            yName:
+              month.categories.name === "__other"
+                ? "Без категории"
+                : _capitalise(month.categories.name),
+            stacked: true,
+            normalizedTo: 100,
+          });
+        }
       });
-      chartData.push(newMonth);
+      chartData.push({
+        ...newYear,
+        months: newYear.months.sort((a, b) => (a.month > b.month ? 1 : -1)),
+      });
     });
-    return chartData
-      .sort((a, b) => (a.month > b.month ? 1 : -1))
-      .map((item) => ({
-        ...item,
-        month: format(new Date(item.month), "MMM yyyy"),
-      }));
+    return chartData.sort((a, b) => (a.year > b.year ? 1 : -1));
   }, [transactions]);
-
-  const seriesChart = useCallback(() => {
-    const seriesData: ISeries[] = [];
-    transactions?.totalExpenseByCategory.forEach((item) => {
-      if (item.total > 0) {
-        seriesData.push({
-          type: "bar",
-          xKey: "month",
-          yKey: item.category,
-          yName:
-            item.category === "__other"
-              ? "Без категории"
-              : _capitalise(item.category),
-          stacked: true,
-          normalizedTo: 100,
-        });
-      }
-    });
-    return seriesData;
-  }, [transactions]);
-
-  const options: AgChartOptions = {
-    title: {
-      text: "Расходы по месяцам",
-    },
-
-    theme: theme === "dark" ? "ag-default-dark" : "ag-default",
-    background: { visible: false },
-    data: expenseChartData(),
-    series: seriesChart(),
-    axes: [
-      {
-        type: "category",
-        position: "bottom",
-      },
-      {
-        type: "number",
-        label: {
-          format: "#{f}%",
-        },
-      },
-    ],
-  };
 
   return (
-    <Card className="h-[450px] overflow-x-auto">
-      <AgCharts options={options} className="h-full min-w-fit" />
+    <Card className="px-14 pb-10">
+      <div className="slider-container">
+        <Slider
+          {...{ ...settings, initialSlide: expenseChartData().length - 1 }}
+        >
+          {expenseChartData().map((year) => (
+            <AgCharts
+              key={year.year}
+              options={{
+                title: { text: `${year.year}г.` },
+                subtitle: { text: "Расходы по месяцам " },
+                data: year.months,
+                series: year.series,
+                theme: theme === "dark" ? "ag-default-dark" : "ag-default",
+                background: { visible: false },
+              }}
+              className="h-[450px]"
+            />
+          ))}
+        </Slider>
+      </div>
     </Card>
   );
 };

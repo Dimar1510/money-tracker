@@ -31,3 +31,7 @@ h3 {
 main {
   min-height: 100vh;
 }
+
+.slick-dots button::before {
+  color: hsl(var(--nextui-primary)) !important;
+}

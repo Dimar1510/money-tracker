@@ -1,11 +1,11 @@
 import { ITransaction } from "src/components/Transactions/Transactions";
-import { ByMonth, Category, Transaction, User } from "../types";
+import { ByMonth, ByYear, Category, Transaction, User } from "../types";
 import { api } from "./api";
 
 type GetTransactions = {
   transactions: Transaction[];
   totalExpenseByCategory: Category[];
-  totalExpenseByMonth: ByMonth[];
+  totalExpenseByYear: ByYear[];
 };
 
 export const transactionApi = api.injectEndpoints({
