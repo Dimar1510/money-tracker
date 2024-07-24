@@ -75,11 +75,23 @@ const ByMonth = () => {
     background: { visible: false },
     data: expenseChartData(),
     series: seriesChart(),
+    axes: [
+      {
+        type: "category",
+        position: "bottom",
+      },
+      {
+        type: "number",
+        label: {
+          format: "#{f}%",
+        },
+      },
+    ],
   };
 
   return (
-    <Card className="h-[450px]">
-      <AgCharts options={options} className="h-full" />
+    <Card className="h-[450px] overflow-x-auto">
+      <AgCharts options={options} className="h-full min-w-fit" />
     </Card>
   );
 };

@@ -24,7 +24,7 @@ export const columnDefs = ({
     {
       headerName: "Название",
       field: "name",
-      minWidth: 150,
+      minWidth: 120,
       flex: 1,
       filter: true,
       headerCheckboxSelection: true,
