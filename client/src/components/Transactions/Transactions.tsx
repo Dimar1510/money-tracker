@@ -46,7 +46,6 @@ export interface ITransaction {
 
 export const TransactionsList = () => {
   const { data } = useGetAllTransactionsQuery();
-  console.log(data?.totalExpenseByCategory);
   const [deleteTransaction] = useDeleteTransactionMutation();
   const [edit, setEdit] = useState<string | null>(null);
   const [error, setError] = useState("");

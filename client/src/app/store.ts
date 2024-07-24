@@ -2,6 +2,7 @@ import type { Action, ThunkAction } from "@reduxjs/toolkit";
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { api } from "./services/api";
 import user from "./userSlice";
+import grid from "./gridSlice";
 import storage from "redux-persist/lib/storage";
 import {
   persistStore,
@@ -16,6 +17,7 @@ import {
 const rootReducer = combineReducers({
   [api.reducerPath]: api.reducer,
   user,
+  grid,
 });
 
 const persistConfig = {
