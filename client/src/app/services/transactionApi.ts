@@ -43,7 +43,7 @@ export const transactionApi = api.injectEndpoints({
         method: "DELETE",
         body: ids,
       }),
-      invalidatesTags: ["transaction"],
+      invalidatesTags: ["transaction", "category"],
     }),
   }),
 });

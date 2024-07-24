@@ -12,7 +12,7 @@ const BalanceCard = () => {
     }
   });
   return (
-    <Card className="max-w-[400px]">
+    <Card className="max-w-[400px] flex-1">
       <CardHeader className="flex gap-3">
         <h3 className="text-md">Отслеживаемый баланс</h3>
       </CardHeader>

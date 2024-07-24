@@ -72,7 +72,7 @@ const FormTransaction: FC<IProps> = ({
         <FormInput
           control={control}
           name="name"
-          label="Name"
+          label="Название"
           type="text"
           required="Введите название"
         />
@@ -82,41 +82,49 @@ const FormTransaction: FC<IProps> = ({
             { key: "expense", label: "Расход" },
             { key: "income", label: "Доход" },
           ]}
-          label="Type"
+          label="Тип"
           name="type"
           required="Указать тип"
         />
         <FormInput
           control={control}
           name="amount"
-          label="Amount"
+          label="Сумма"
           type="number"
-          required="Указать количество"
+          required="Указать сумму"
         />
 
         <FormAutocomplete
           control={control}
           name="category"
-          label="Category"
+          label="Категория"
           placeholder="Без категории"
         />
 
         <FormInput
           control={control}
           name="date"
-          label="Date"
+          label="Дата"
           type="date"
           required="Указать дату"
         />
         <div>
           {edit ? (
             <div className="flex gap-2">
-              <Button type="submit" className="w-full" color="primary">
+              <Button
+                type="submit"
+                className="w-full text-black font-semibold"
+                color="primary"
+              >
                 Сохранить
               </Button>
             </div>
           ) : (
-            <Button type="submit" className="w-full" color="primary">
+            <Button
+              type="submit"
+              className="w-full text-black font-semibold"
+              color="primary"
+            >
               Добавить
             </Button>
           )}

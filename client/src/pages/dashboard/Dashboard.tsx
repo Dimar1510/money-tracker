@@ -23,7 +23,7 @@ const Dashboard = () => {
   if (current)
     return (
       <div className="flex gap-8 flex-col p-8 flex-1 max-w-[1200px] w-full">
-        <div className="flex gap-2 justify-between min-w-[280px]">
+        <div className="flex gap-8 justify-between min-w-[280px]">
           <BalanceCard />
           <IncomeCard />
           <ExpenseCard />

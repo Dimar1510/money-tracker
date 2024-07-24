@@ -35,6 +35,7 @@ import {
 import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
 import { ThemeContext } from "../ThemeProvider";
 import { columnDefs } from "./columnDefs";
+import DeleteMany from "./DeleteMany";
 
 export interface ITransaction {
   name: string;
@@ -194,9 +195,10 @@ export const TransactionsList = () => {
           className="w-[200px]"
         />
         {remove.length > 0 && (
-          <Button onClick={handleDeleteMany} startContent={<MdDeleteOutline />}>
-            Удалить: {remove.length}
-          </Button>
+          <DeleteMany
+            handleDeleteMany={handleDeleteMany}
+            count={remove.length}
+          />
         )}
       </div>
 
