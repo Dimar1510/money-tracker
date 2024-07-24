@@ -12,6 +12,7 @@ import Slider from "react-slick";
 setDefaultOptions({ locale: ru });
 import { settings } from "./SliderSettings";
 import ToggleCardBody from "../ui/ToggleCardBody/ToggleCardBody";
+import { format } from "date-fns";
 
 interface ISeries {
   type: "bar";
@@ -39,7 +40,6 @@ const ByMonth = () => {
 
   const expenseChartData = useMemo(() => {
     if (transactions) {
-      console.log("recalculate years");
       const chartData: IYear[] = [];
       transactions.totalExpenseByYear.forEach((year) => {
         const newYear: IYear = {
@@ -47,34 +47,35 @@ const ByMonth = () => {
           months: [],
           series: [],
         };
-        year.months.forEach((month) => {
+        year.months.forEach((monthItem) => {
+          const monthItemDate = format(new Date(monthItem.month), "LLL");
           const existMonth = newYear.months.find(
-            (item) => item.month === month.month
+            (item) => item.month === monthItemDate
           );
           if (existMonth) {
-            existMonth[month.categories.name] = month.categories.total;
+            existMonth[monthItem.categories.name] = monthItem.categories.total;
           } else {
             const newMonth: IMonth = {
-              month: month.month,
+              month: monthItemDate,
             };
 
-            newMonth[month.categories.name] = month.categories.total;
+            newMonth[monthItem.categories.name] = monthItem.categories.total;
 
             newYear.months.push(newMonth);
           }
 
           const existCategory = newYear.series.find(
-            (item) => item.yKey === month.categories.name
+            (item) => item.yKey === monthItem.categories.name
           );
           if (!existCategory) {
             newYear.series.push({
               type: "bar",
               xKey: "month",
-              yKey: month.categories.name,
+              yKey: monthItem.categories.name,
               yName:
-                month.categories.name === "__other"
+                monthItem.categories.name === "__other"
                   ? "Без категории"
-                  : _capitalise(month.categories.name),
+                  : _capitalise(monthItem.categories.name),
               stacked: true,
               normalizedTo: 100,
             });
@@ -82,7 +83,9 @@ const ByMonth = () => {
         });
         chartData.push({
           ...newYear,
-          months: newYear.months.sort((a, b) => (a.month > b.month ? 1 : -1)),
+          months: newYear.months.sort((a, b) =>
+            new Date(a.month) > new Date(b.month) ? 1 : -1
+          ),
         });
       });
       return chartData.sort((a, b) => (a.year > b.year ? 1 : -1));
