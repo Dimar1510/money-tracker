@@ -37,6 +37,7 @@ import { ThemeContext } from "../ThemeProvider";
 import { columnDefs } from "./columnDefs";
 import DeleteMany from "./DeleteMany";
 import { format } from "date-fns";
+import HelpTooltip from "./HelpTooltip";
 
 export interface ITransaction {
   name: string;
@@ -187,13 +188,17 @@ export const TransactionsList = () => {
       </Button>
 
       <div className="flex justify-between">
-        <Input
-          type="text"
-          id="filter-text-box"
-          placeholder="Быстрый поиск..."
-          onInput={onFilterTextBoxChanged}
-          className="w-[200px]"
-        />
+        <div className="flex gap-2 items-center">
+          <Input
+            type="text"
+            id="filter-text-box"
+            placeholder="Быстрый поиск..."
+            onInput={onFilterTextBoxChanged}
+            className="w-[200px]"
+          />
+          <HelpTooltip />
+        </div>
+
         {remove.length > 0 && (
           <DeleteMany
             handleDeleteMany={handleDeleteMany}
