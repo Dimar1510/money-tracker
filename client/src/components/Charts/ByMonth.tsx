@@ -39,25 +39,25 @@ const ByMonth = () => {
   const { data: transactions } = useGetAllTransactionsQuery();
 
   const expenseChartData = useMemo(() => {
-    if (!transactions || !transactions.totalExpenseByYear) {
+    if (!transactions || !transactions.byYearData) {
       return [];
     }
 
-    const chartData = transactions.totalExpenseByYear.map((year) => {
+    const chartData = transactions.byYearData.map((yearItem) => {
       const newYear: IYear = {
-        year: year._id,
+        year: yearItem.year,
         months: [],
         series: [],
       };
 
       const seriesMap = new Map<string, boolean>();
 
-      year.months.forEach((monthItem) => {
+      yearItem.months.forEach((monthItem) => {
         const monthItemDate = format(new Date(monthItem.month), "LLL");
         const newMonth: IMonth = { month: monthItemDate };
 
-        monthItem.categories.forEach((category) => {
-          newMonth[category.name] = category.total;
+        monthItem.expenseCategories.forEach((category) => {
+          newMonth[category.name] = category.expense;
 
           if (!seriesMap.has(category.name)) {
             newYear.series.push({

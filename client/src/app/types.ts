@@ -30,11 +30,12 @@ export type Category = {
 
 export type ByMonth = {
   month: string;
-  total: number;
-  categories: { name: string; total: number }[];
+  expense: number;
+  income: number;
+  expenseCategories: { name: string; expense: number }[];
 };
 
 export type ByYear = {
-  _id: string;
+  year: string;
   months: ByMonth[];
 };

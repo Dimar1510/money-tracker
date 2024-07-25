@@ -6,10 +6,8 @@ import { ThemeContext } from "../ThemeProvider";
 import { Card, CardHeader } from "@nextui-org/react";
 import ToggleCardBody from "../ui/ToggleCardBody/ToggleCardBody";
 import { _capitalise } from "ag-grid-community";
-
 import { format, setDefaultOptions } from "date-fns";
 import { ru } from "date-fns/locale";
-
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
@@ -31,19 +29,24 @@ const BalanceChart = () => {
   const { theme } = useContext(ThemeContext);
 
   const expenseChartData = useMemo(() => {
-    if (!transactions || !transactions.totalExpenseByYear) {
+    if (!transactions || !transactions.byYearData) {
       return [];
     }
 
-    const chartData = transactions.totalExpenseByYear.map((year) => {
+    const chartData = transactions.byYearData.map((yearItem) => {
       const newYear: IYear = {
-        year: year._id,
+        year: yearItem.year,
         months: [],
       };
 
-      year.months.forEach((monthItem) => {
+      yearItem.months.forEach((monthItem) => {
         const monthItemDate = format(new Date(monthItem.month), "LLL");
-        newYear.months.push({ month: monthItemDate, total: monthItem.total });
+        newYear.months.push({
+          month: monthItemDate,
+          expense: monthItem.expense,
+          income: monthItem.income,
+          balance: monthItem.income - monthItem.expense,
+        });
       });
 
       return newYear;
@@ -83,8 +86,14 @@ const BalanceChart = () => {
                     {
                       type: "line",
                       xKey: "month",
-                      yKey: "total",
-                      yName: "Expenses",
+                      yKey: "expense",
+                      yName: "Расходы",
+                    },
+                    {
+                      type: "line",
+                      xKey: "month",
+                      yKey: "balance",
+                      yName: "Баланс",
                     },
                   ],
                   theme: theme === "dark" ? "ag-default-dark" : "ag-default",

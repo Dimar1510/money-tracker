@@ -164,15 +164,9 @@ const transactionController = {
         },
         include: { category: { select: { name: true } } },
       });
-
       const totalExpenseByYear = await prisma.transaction.aggregateRaw({
         pipeline: [
-          {
-            $match: {
-              userId: { $oid: userId },
-              type: "expense",
-            },
-          },
+          { $match: { userId: { $oid: userId }, type: "expense" } },
           {
             $lookup: {
               let: { catObjId: { $toObjectId: "$categoryId" } },
@@ -183,51 +177,97 @@ const transactionController = {
               as: "category",
             },
           },
-          {
-            $unwind: "$category",
-          },
+          { $unwind: "$category" },
           {
             $group: {
               _id: {
                 year: { $dateToString: { format: "%Y", date: "$date" } },
                 month: { $dateToString: { format: "%Y-%m", date: "$date" } },
               },
-              total: { $sum: "$amount" },
+              expense: { $sum: "$amount" },
               categories: {
-                $push: {
-                  name: "$category.name",
-                  total: { $sum: "$amount" },
-                },
+                $push: { name: "$category.name", expense: { $sum: "$amount" } },
               },
             },
           },
-          {
-            $sort: {
-              "_id.month": 1,
-            },
-          },
+          { $sort: { "_id.year": 1, "_id.month": 1 } },
           {
             $group: {
               _id: "$_id.year",
-              total: { $sum: "$total" },
               months: {
                 $push: {
                   month: "$_id.month",
-                  total: "$total",
+                  expense: "$expense",
                   categories: "$categories",
                 },
               },
             },
           },
+        ],
+      });
+
+      const totalIncomeByYear = await prisma.transaction.aggregateRaw({
+        pipeline: [
+          { $match: { userId: { $oid: userId }, type: "income" } },
           {
-            $sort: { _id: 1 },
+            $group: {
+              _id: {
+                year: { $dateToString: { format: "%Y", date: "$date" } },
+                month: { $dateToString: { format: "%Y-%m", date: "$date" } },
+              },
+              income: { $sum: "$amount" },
+            },
+          },
+          { $sort: { "_id.year": 1, "_id.month": 1 } },
+          {
+            $group: {
+              _id: "$_id.year",
+              months: { $push: { month: "$_id.month", income: "$income" } },
+            },
           },
         ],
       });
 
+      const expenseMap = new Map();
+      const incomeMap = new Map();
+
+      totalExpenseByYear.forEach((yearData) => {
+        expenseMap.set(yearData._id, yearData);
+      });
+
+      totalIncomeByYear.forEach((yearData) => {
+        incomeMap.set(yearData._id, yearData);
+      });
+
+      // Combine data
+      const combinedResult = [];
+      expenseMap.forEach((expenseYearData, year) => {
+        const incomeYearData = incomeMap.get(year) || { months: [] };
+
+        const combinedMonths = expenseYearData.months.map((expenseMonth) => {
+          // Find the corresponding income month or default to zero if not found
+          const incomeMonth = incomeYearData.months.find(
+            (m) => m.month === expenseMonth.month
+          ) || { month: expenseMonth.month, income: 0 };
+
+          return {
+            month: expenseMonth.month,
+            expense: expenseMonth.expense,
+            income: incomeMonth.income || 0,
+            expenseCategories: expenseMonth.categories || [], // Include expense categories
+          };
+        });
+
+        // Push the combined year data into the result array
+        combinedResult.push({
+          year: year,
+          months: combinedMonths,
+        });
+      });
+
       res.json({
         transactions,
-        totalExpenseByYear,
+        byYearData: combinedResult.sort((a, b) => a.year.localeCompare(b.year)),
       });
     } catch (error) {
       console.log(error);
