@@ -40,7 +40,6 @@ const categoryHandle = async (category, userId) => {
     return newCategoryId;
   } catch (error) {
     console.log(error);
-    next(errorMessage(500, "Error in category handler"));
   }
 };
 

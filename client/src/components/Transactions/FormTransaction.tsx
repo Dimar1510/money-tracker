@@ -42,12 +42,20 @@ const FormTransaction: FC<IProps> = ({
     try {
       if (edit) {
         await updateTransaction({
-          itemData: { ...data },
+          itemData: {
+            ...data,
+            name: data.name.trim(),
+            category: data.category.trim(),
+          },
           id: edit,
         }).unwrap();
       } else {
         await createTransaction({
-          itemData: { ...data },
+          itemData: {
+            ...data,
+            name: data.name.trim(),
+            category: data.category.trim(),
+          },
         }).unwrap();
       }
       setEdit(null);
@@ -98,7 +106,7 @@ const FormTransaction: FC<IProps> = ({
           control={control}
           name="category"
           label="Категория"
-          placeholder="Без категории"
+          placeholder="Оставить без категории"
         />
 
         <FormInput
