@@ -20,6 +20,7 @@ import {
   MdOutlineEdit,
 } from "react-icons/md";
 import { FiSave } from "react-icons/fi";
+import normalizeString from "src/utils/normalizeString";
 interface IProps {
   data: ICategory[];
 }
@@ -31,7 +32,6 @@ const CategoryList: FC<IProps> = ({ data }) => {
   const [edit, setEdit] = useState<string | null>(null);
   const [deleteItem, setDeleteItem] = useState<string | null>(null);
   const categories: ICategory[] = [];
-
   const handleSelectionChange = (key: React.Key | null) => {
     setDeleteItem(null);
     setEdit(null);
@@ -43,16 +43,27 @@ const CategoryList: FC<IProps> = ({ data }) => {
   const handleSave = () => {
     const category = categories.find((item) => item.name === value);
     if (category) {
-      alert(`категорию под именем ${category.name} переименовали в ${edit}`);
-      setValue("");
-      setEdit(null);
+      const id = category.id;
+      const newName = edit ? normalizeString(edit) : null;
+      if (category.name !== newName) {
+        if (categories.find((item) => item.name === newName)) {
+          alert("уже есть такая категория");
+        } else {
+          alert(
+            `категорию под именем ${category.name} и id ${id} переименовали в ${edit}`
+          );
+          setValue("");
+          setEdit(null);
+        }
+      }
     }
   };
 
   const handleDelete = () => {
     const category = categories.find((item) => item.name === value);
     if (category) {
-      alert(`категорию под именем ${category.name} удалили`);
+      const id = category.id;
+      alert(`категорию под именем ${category.name} и id ${id} удалили`);
       setDeleteItem(null);
       setValue("");
       setEdit(null);
@@ -133,12 +144,12 @@ const CategoryList: FC<IProps> = ({ data }) => {
                     {value && !deleteItem && (
                       <div className="flex flex-col items-center w-full">
                         <p className="text-default-500 text-small">
-                          {edit
+                          {edit !== null
                             ? `Переименовать категорию ${_capitalise(value)}`
                             : "Выбрана категория:"}
                         </p>
                         <div className="flex justify-around w-full py-4">
-                          {edit ? (
+                          {edit !== null ? (
                             <input
                               value={edit}
                               onChange={(e) => setEdit(e.target.value)}
@@ -147,7 +158,7 @@ const CategoryList: FC<IProps> = ({ data }) => {
                           ) : (
                             _capitalise(value)
                           )}
-                          {edit ? (
+                          {edit !== null ? (
                             <div className="flex gap-3">
                               <button onClick={() => setEdit(null)}>
                                 <MdOutlineCancel />

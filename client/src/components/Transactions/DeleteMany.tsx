@@ -7,7 +7,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { MdDeleteOutline } from "react-icons/md";
 import { ThemeContext } from "../ThemeProvider";
 

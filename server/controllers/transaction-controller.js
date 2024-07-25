@@ -159,33 +159,11 @@ const transactionController = {
         where: {
           userId,
         },
+        orderBy: {
+          date: "asc",
+        },
         include: { category: { select: { name: true } } },
       });
-
-      // const getCategories = await prisma.category.findMany({
-      //   where: { userId },
-      //   include: {
-      //     transactions: {
-      //       select: {
-      //         name: true,
-      //         amount: true,
-      //         type: true,
-      //       },
-      //     },
-      //   },
-      // });
-
-      // const totalExpenseByCategory = [];
-      // getCategories.forEach((category) => {
-      //   totalExpenseByCategory.push({
-      //     total: category.transactions.reduce(
-      //       (a, b) => (b.type === "expense" ? a + b.amount : a),
-      //       0
-      //     ),
-      //     category: category.name,
-      //     categoryId: category.id,
-      //   });
-      // });
 
       const totalExpenseByYear = await prisma.transaction.aggregateRaw({
         pipeline: [
@@ -206,33 +184,49 @@ const transactionController = {
             },
           },
           {
+            $unwind: "$category",
+          },
+          {
             $group: {
-              _id: { $dateToString: { format: "%Y", date: "$date" } },
+              _id: {
+                year: { $dateToString: { format: "%Y", date: "$date" } },
+                month: { $dateToString: { format: "%Y-%m", date: "$date" } },
+              },
               total: { $sum: "$amount" },
-              months: {
-                $addToSet: {
-                  month: { $dateToString: { format: "%Y-%m", date: "$date" } },
+              categories: {
+                $push: {
+                  name: "$category.name",
                   total: { $sum: "$amount" },
-                  categories: {
-                    name: { $first: "$category.name" },
-                    total: { $sum: "$amount" },
-                  },
                 },
               },
             },
           },
+          {
+            $sort: {
+              "_id.month": 1,
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.year",
+              total: { $sum: "$total" },
+              months: {
+                $push: {
+                  month: "$_id.month",
+                  total: "$total",
+                  categories: "$categories",
+                },
+              },
+            },
+          },
+          {
+            $sort: { _id: 1 },
+          },
         ],
       });
 
-      const newTransactions = [];
-      transactions.forEach((item) => {
-        newTransactions.push({
-          ...item,
-          date: format(new Date(item.date), "yyyy-MM-dd"),
-        });
-      });
       res.json({
-        transactions: newTransactions,
+        transactions,
         totalExpenseByYear,
       });
     } catch (error) {

@@ -31,7 +31,7 @@ export type Category = {
 export type ByMonth = {
   month: string;
   total: number;
-  categories: { name: string; total: number };
+  categories: { name: string; total: number }[];
 };
 
 export type ByYear = {

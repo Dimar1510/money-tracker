@@ -19,7 +19,10 @@ const ToggleCardBody: FC<IProps> = ({ cardKey, cardTitle, children }) => {
     <>
       <CardHeader className="justify-between">
         <h3>{cardTitle}</h3>
-        <button onClick={() => toggleCard(cardKey)}>
+        <button
+          onClick={() => toggleCard(cardKey)}
+          className="hover:text-primary"
+        >
           {grid[cardKey] ? <FaRegEyeSlash /> : <FaRegEye />}
         </button>
       </CardHeader>

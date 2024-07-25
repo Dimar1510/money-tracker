@@ -1,4 +1,4 @@
-import { FunctionComponent } from "react";
+import { FC } from "react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { ValueFormatterParams, _capitalise } from "ag-grid-community";
@@ -17,8 +17,8 @@ export const columnDefs = ({
   TypeCellRenderer,
   ActionsCellRenderer,
 }: {
-  TypeCellRenderer: FunctionComponent<CustomCellRendererProps>;
-  ActionsCellRenderer: FunctionComponent<CustomCellRendererProps>;
+  TypeCellRenderer: FC<CustomCellRendererProps>;
+  ActionsCellRenderer: FC<CustomCellRendererProps>;
 }) => {
   return [
     {

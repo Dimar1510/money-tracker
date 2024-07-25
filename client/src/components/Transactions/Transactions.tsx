@@ -36,6 +36,7 @@ import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
 import { ThemeContext } from "../ThemeProvider";
 import { columnDefs } from "./columnDefs";
 import DeleteMany from "./DeleteMany";
+import { format } from "date-fns";
 
 export interface ITransaction {
   name: string;
@@ -81,7 +82,7 @@ export const TransactionsList = () => {
       setEdit(node.data.id);
       onOpen();
       setValue("name", node.data.name);
-      setValue("date", node.data.date);
+      setValue("date", format(new Date(node.data.date), "yyyy-MM-dd"));
       setValue("amount", node.data.amount);
       setValue("type", node.data.type);
       setValue(
@@ -134,7 +135,7 @@ export const TransactionsList = () => {
     );
   }, []);
 
-  const sortGrid = (event: GridReadyEvent, field: string, sortDir: "asc") => {
+  const sortGrid = (event: GridReadyEvent, field: string, sortDir: "desc") => {
     const columnState = {
       state: [
         {
@@ -166,25 +167,24 @@ export const TransactionsList = () => {
     localeText: AG_GRID_LOCALE_RU,
     columnDefs: columnDefs({ ActionsCellRenderer, TypeCellRenderer }),
     onGridReady: function (event: GridReadyEvent) {
-      sortGrid(event, "date", "asc");
+      sortGrid(event, "date", "desc");
     },
   };
 
   return (
     <div className="w-full flex flex-col gap-3 flex-1">
-      <div className="flex justify-between">
-        <Button
-          onPress={() => {
-            onOpen();
-            reset();
-            setEdit(null);
-            setError("");
-          }}
-          startContent={<MdAdd />}
-        >
-          Добавить транзакцию
-        </Button>
-      </div>
+      <Button
+        className="self-start"
+        onPress={() => {
+          onOpen();
+          reset();
+          setEdit(null);
+          setError("");
+        }}
+        startContent={<MdAdd />}
+      >
+        Добавить транзакцию
+      </Button>
 
       <div className="flex justify-between">
         <Input

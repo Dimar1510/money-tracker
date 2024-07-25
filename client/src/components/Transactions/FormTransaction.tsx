@@ -13,6 +13,7 @@ import { hasErrorField } from "src/utils/has-error-field";
 import { ITransaction } from "./Transactions";
 import FormSelect from "../ui/FormSelect/FormSelect";
 import FormAutocomplete from "../ui/FormAutocomplete/FormAutocomplete";
+import normalizeString from "src/utils/normalizeString";
 
 interface IProps {
   error: string;
@@ -44,8 +45,8 @@ const FormTransaction: FC<IProps> = ({
         await updateTransaction({
           itemData: {
             ...data,
-            name: data.name.trim(),
-            category: data.category.trim(),
+            name: normalizeString(data.name),
+            category: normalizeString(data.category),
           },
           id: edit,
         }).unwrap();
@@ -53,8 +54,8 @@ const FormTransaction: FC<IProps> = ({
         await createTransaction({
           itemData: {
             ...data,
-            name: data.name.trim(),
-            category: data.category.trim(),
+            name: normalizeString(data.name),
+            category: normalizeString(data.category),
           },
         }).unwrap();
       }

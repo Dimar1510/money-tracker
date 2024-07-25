@@ -5,7 +5,7 @@ import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 import { setDefaultOptions } from "date-fns";
 import { ru } from "date-fns/locale";
 import { ThemeContext } from "../ThemeProvider";
-import { Card } from "@nextui-org/react";
+import { Card, CardHeader } from "@nextui-org/react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
@@ -39,60 +39,64 @@ const ByMonth = () => {
   const { data: transactions } = useGetAllTransactionsQuery();
 
   const expenseChartData = useMemo(() => {
-    if (transactions) {
-      const chartData: IYear[] = [];
-      transactions.totalExpenseByYear.forEach((year) => {
-        const newYear: IYear = {
-          year: year._id,
-          months: [],
-          series: [],
-        };
-        year.months.forEach((monthItem) => {
-          const monthItemDate = format(new Date(monthItem.month), "LLL");
-          const existMonth = newYear.months.find(
-            (item) => item.month === monthItemDate
-          );
-          if (existMonth) {
-            existMonth[monthItem.categories.name] = monthItem.categories.total;
-          } else {
-            const newMonth: IMonth = {
-              month: monthItemDate,
-            };
+    if (!transactions || !transactions.totalExpenseByYear) {
+      return [];
+    }
 
-            newMonth[monthItem.categories.name] = monthItem.categories.total;
+    const chartData = transactions.totalExpenseByYear.map((year) => {
+      const newYear: IYear = {
+        year: year._id,
+        months: [],
+        series: [],
+      };
 
-            newYear.months.push(newMonth);
-          }
+      const seriesMap = new Map<string, boolean>();
 
-          const existCategory = newYear.series.find(
-            (item) => item.yKey === monthItem.categories.name
-          );
-          if (!existCategory) {
+      year.months.forEach((monthItem) => {
+        const monthItemDate = format(new Date(monthItem.month), "LLL");
+        const newMonth: IMonth = { month: monthItemDate };
+
+        monthItem.categories.forEach((category) => {
+          newMonth[category.name] = category.total;
+
+          if (!seriesMap.has(category.name)) {
             newYear.series.push({
               type: "bar",
               xKey: "month",
-              yKey: monthItem.categories.name,
+              yKey: category.name,
               yName:
-                monthItem.categories.name === "__other"
+                category.name === "__other"
                   ? "Без категории"
-                  : _capitalise(monthItem.categories.name),
+                  : _capitalise(category.name),
               stacked: true,
               normalizedTo: 100,
             });
+            seriesMap.set(category.name, true);
           }
         });
-        chartData.push({
-          ...newYear,
-          months: newYear.months.sort((a, b) =>
-            new Date(a.month) > new Date(b.month) ? 1 : -1
-          ),
-        });
+
+        newYear.months.push(newMonth);
       });
-      return chartData.sort((a, b) => (a.year > b.year ? 1 : -1));
-    }
+
+      return newYear;
+    });
+
+    return chartData;
   }, [transactions]);
 
-  if (expenseChartData)
+  if (expenseChartData && expenseChartData.length < 1)
+    return (
+      <Card>
+        <CardHeader className="justify-between">
+          <h3>Расходы по времени</h3>
+        </CardHeader>
+        <p className="px-4 pb-4 text-sm text-default-400">
+          Создайте новую транзакцию, и она появится в этом разделе.
+        </p>
+      </Card>
+    );
+
+  if (expenseChartData && expenseChartData.length > 0)
     return (
       <Card className="">
         <ToggleCardBody cardKey="byYear" cardTitle="Расходы по времени">
@@ -105,7 +109,7 @@ const ByMonth = () => {
                   key={year.year}
                   options={{
                     title: { text: `${year.year}г.` },
-                    subtitle: { text: "Расходы по месяцам " },
+                    subtitle: { text: "Нормализация расходов по месяцам" },
                     data: year.months,
                     series: year.series,
                     theme: theme === "dark" ? "ag-default-dark" : "ag-default",
