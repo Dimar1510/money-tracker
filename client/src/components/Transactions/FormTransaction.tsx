@@ -10,7 +10,7 @@ import ErrorMessage from "../ui/error-message/ErrorMessage";
 import { Control, UseFormHandleSubmit } from "react-hook-form";
 import FormInput from "../ui/FormInput/FormInput";
 import { hasErrorField } from "src/utils/has-error-field";
-import { ITransaction } from "./Transactions";
+import { ITransactionFormItem } from "./Transactions";
 import FormSelect from "../ui/FormSelect/FormSelect";
 import FormAutocomplete from "../ui/FormAutocomplete/FormAutocomplete";
 import normalizeString from "src/utils/normalizeString";
@@ -21,8 +21,8 @@ interface IProps {
   edit: string | null;
   setEdit: (id: string | null) => void;
   reset: () => void;
-  handleSubmit: UseFormHandleSubmit<ITransaction, undefined>;
-  control: Control<ITransaction, any>;
+  handleSubmit: UseFormHandleSubmit<ITransactionFormItem, undefined>;
+  control: Control<ITransactionFormItem, any>;
   onClose: () => void;
 }
 
@@ -39,7 +39,7 @@ const FormTransaction: FC<IProps> = ({
   const [createTransaction] = useCreateTransactionMutation();
   const [updateTransaction] = useUpdateTransactionMutation();
 
-  const onSubmit = async (data: ITransaction) => {
+  const onSubmit = async (data: ITransactionFormItem) => {
     try {
       if (edit) {
         await updateTransaction({

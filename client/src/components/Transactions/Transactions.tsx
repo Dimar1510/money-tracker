@@ -38,8 +38,10 @@ import { columnDefs } from "./columnDefs";
 import DeleteMany from "./DeleteMany";
 import { format } from "date-fns";
 import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
+import xlsx from "json-as-xlsx";
+import Export from "./Export";
 
-export interface ITransaction {
+export interface ITransactionFormItem {
   name: string;
   date: string;
   amount: number;
@@ -56,14 +58,15 @@ export const TransactionsList = () => {
   const gridRef = useRef<AgGridReact>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const { handleSubmit, control, setValue, reset } = useForm<ITransaction>({
-    mode: "onChange",
-    reValidateMode: "onBlur",
-    defaultValues: {
-      type: "expense",
-    },
-  });
-
+  const { handleSubmit, control, setValue, reset } =
+    useForm<ITransactionFormItem>({
+      mode: "onChange",
+      reValidateMode: "onBlur",
+      defaultValues: {
+        type: "expense",
+      },
+    });
+  const allTransactions = data ? data.transactions : [];
   const ActionsCellRenderer: FunctionComponent<CustomCellRendererProps> = ({
     node,
   }) => {
@@ -174,18 +177,26 @@ export const TransactionsList = () => {
 
   return (
     <div className="w-full flex flex-col gap-3 flex-1">
-      <Button
-        className="self-start"
-        onPress={() => {
-          onOpen();
-          reset();
-          setEdit(null);
-          setError("");
-        }}
-        startContent={<MdAdd />}
-      >
-        Добавить транзакцию
-      </Button>
+      <div className="flex justify-between">
+        <Button
+          className="self-start"
+          onPress={() => {
+            onOpen();
+            reset();
+            setEdit(null);
+            setError("");
+          }}
+          startContent={<MdAdd />}
+        >
+          Добавить транзакцию
+        </Button>
+        {remove.length > 0 && (
+          <DeleteMany
+            handleDeleteMany={handleDeleteMany}
+            count={remove.length}
+          />
+        )}
+      </div>
 
       <div className="flex justify-between">
         <div className="flex gap-2 items-center">
@@ -198,13 +209,7 @@ export const TransactionsList = () => {
           />
           <HelpTooltip text="Формат даты: yyyy-mm-dd" placement="right" />
         </div>
-
-        {remove.length > 0 && (
-          <DeleteMany
-            handleDeleteMany={handleDeleteMany}
-            count={remove.length}
-          />
-        )}
+        <Export data={allTransactions} />
       </div>
 
       <div
@@ -216,7 +221,7 @@ export const TransactionsList = () => {
           ref={gridRef}
           rowSelection="multiple"
           columnDefs={columnDefs({ ActionsCellRenderer, TypeCellRenderer })}
-          rowData={data?.transactions}
+          rowData={allTransactions}
           gridOptions={gridOptions}
           suppressRowClickSelection={true}
           onSelectionChanged={onSelectionChanged}
