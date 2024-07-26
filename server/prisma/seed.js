@@ -46,6 +46,8 @@ const categoryHandle = async (category, userId) => {
 };
 
 async function main() {
+  await prisma.transaction.deleteMany();
+  await prisma.category.deleteMany();
   for (let transaction of transactions) {
     const newDate = new Date(transaction.date);
     const userId = USERID;
