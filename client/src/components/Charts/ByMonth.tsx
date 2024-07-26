@@ -1,19 +1,16 @@
 import { AgCharts } from "ag-charts-react";
 import { _capitalise } from "ag-grid-community";
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 import { setDefaultOptions } from "date-fns";
 import { ru } from "date-fns/locale";
 import { ThemeContext } from "../ThemeProvider";
 import { Card, CardHeader } from "@nextui-org/react";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
 setDefaultOptions({ locale: ru });
-import { settings } from "./SliderSettings";
 import ToggleCardBody from "../ui/ToggleCardBody/ToggleCardBody";
 import { format } from "date-fns";
 import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
+import ChartNavigation from "./ChartNavigation";
 
 interface ISeries {
   type: "bar";
@@ -38,6 +35,7 @@ interface IYear {
 const ByMonth = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const { data: transactions } = useGetAllTransactionsQuery();
+  const [slide, setSlide] = useState(0);
 
   const expenseChartData = useMemo(() => {
     if (!transactions || !transactions.byYearData) {
@@ -90,6 +88,12 @@ const ByMonth = () => {
     return chartData;
   }, [transactions]);
 
+  useEffect(() => {
+    if (expenseChartData.length > 0) {
+      setSlide(expenseChartData.length - 1);
+    }
+  }, [expenseChartData]);
+
   if (expenseChartData && expenseChartData.length < 1)
     return (
       <Card>
@@ -101,31 +105,31 @@ const ByMonth = () => {
         </p>
       </Card>
     );
-
-  if (expenseChartData && expenseChartData.length > 0)
+  const year = expenseChartData[slide];
+  if (year)
     return (
       <Card className="">
         <ToggleCardBody cardKey="byYear" cardTitle="Расходы">
           <div className="slider-container px-14 pb-10">
-            <Slider
-              {...{ ...settings, initialSlide: expenseChartData.length - 1 }}
-            >
-              {expenseChartData.map((year) => (
-                <AgCharts
-                  key={year.year}
-                  options={{
-                    title: { text: `${year.year}г.` },
-                    subtitle: { text: "Нормализация расходов по месяцам" },
-                    data: year.months,
-                    series: year.series,
-                    theme: theme === "dark" ? "ag-default-dark" : "ag-default",
-                    background: { visible: false },
-                  }}
-                  className="h-[450px]"
-                />
-              ))}
-            </Slider>
-            <div className="flex justify-end pb-4 pr-4">
+            <AgCharts
+              options={{
+                subtitle: {
+                  text: `Нормализация расходов по месяцам за ${year.year}г.`,
+                },
+                data: year.months,
+                series: year.series,
+                theme: theme === "dark" ? "ag-default-dark" : "ag-default",
+                background: { visible: false },
+              }}
+              className="h-[450px]"
+            />
+            <div className="flex justify-between pb-4 px-4">
+              <ChartNavigation
+                lastSlide={expenseChartData.length - 1}
+                setSlide={setSlide}
+                slide={slide}
+                year={year.year}
+              />
               <HelpTooltip
                 text="Нажмите на категорию, чтобы скрыть ее"
                 placement="left"
