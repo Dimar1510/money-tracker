@@ -31,6 +31,11 @@ router.put(
   authenticateToken,
   TransactionController.updateTransaction
 );
+router.post(
+  "/transactions/populate",
+  authenticateToken,
+  TransactionController.populate
+);
 
 router.get("/categories", authenticateToken, CategoryController.getCategories);
 router.put(

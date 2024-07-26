@@ -58,7 +58,7 @@ const CategoryList: FC<IProps> = ({ data }) => {
           setError("Такая категория уже существует");
         } else {
           try {
-            if (newName) await updateCategory({ name: newName, id });
+            if (newName) await updateCategory({ name: newName, id }).unwrap();
             setError("");
           } catch (error) {
             if (hasErrorField(error)) {

@@ -14,21 +14,33 @@ import { ThemeContext } from "../ThemeProvider";
 const DeleteMany = ({
   handleDeleteMany,
   count,
+  isLoading,
+  isSuccess,
 }: {
   handleDeleteMany: () => void;
   count: number;
+  isLoading: boolean;
+  isSuccess: boolean;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { theme, toggleTheme } = useContext(ThemeContext);
   return (
     <>
-      <Button onClick={onOpen} startContent={<MdDeleteOutline />}>
+      <Button
+        onClick={onOpen}
+        color="danger"
+        variant="bordered"
+        startContent={<MdDeleteOutline size={20} />}
+      >
         Удалить: {count}
       </Button>
       <Modal
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         className={`${theme} text-foreground`}
+        isDismissable={!isLoading}
+        isKeyboardDismissDisabled={isLoading}
+        hideCloseButton={isLoading}
       >
         <ModalContent>
           {(onClose) => (
@@ -48,12 +60,15 @@ const DeleteMany = ({
                 </p>
               </ModalBody>
               <ModalFooter>
-                <Button onPress={onClose}>Отмена</Button>
+                <Button isLoading={isLoading} onPress={onClose}>
+                  Отмена
+                </Button>
                 <Button
+                  isLoading={isLoading}
                   color="danger"
                   onPress={() => {
                     handleDeleteMany();
-                    onClose();
+                    isSuccess && onClose();
                   }}
                 >
                   Удалить

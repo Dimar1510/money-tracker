@@ -107,7 +107,7 @@ const ByMonth = () => {
 
   if (expenseChartData && expenseChartData.length < 1)
     return (
-      <Card>
+      <Card className="flex-1">
         <CardHeader className="justify-between">
           <h3>Расходы по времени</h3>
         </CardHeader>

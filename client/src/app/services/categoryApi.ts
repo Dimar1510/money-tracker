@@ -8,6 +8,7 @@ export interface ICategory {
 }
 
 export const categoryApi = api.injectEndpoints({
+  overrideExisting: true,
   endpoints: (build) => ({
     getAllCategories: build.query<ICategory[], void>({
       query: () => ({

@@ -8,20 +8,22 @@ const categoryHandle = async (category, userId) => {
   let newCategoryId;
   try {
     if (category) {
-      const findCategory = await prisma.category.findFirst({
-        where: { AND: [{ userId }, { name: category.toLowerCase().trim() }] },
-      });
-
-      if (!findCategory) {
-        const createCategory = await prisma.category.create({
-          data: {
-            name: category.toLowerCase().trim(),
-            userId,
-          },
+      if (category.trim()) {
+        const findCategory = await prisma.category.findFirst({
+          where: { AND: [{ userId }, { name: category.toLowerCase().trim() }] },
         });
-        newCategoryId = createCategory.id;
-      } else {
-        newCategoryId = findCategory.id;
+
+        if (!findCategory) {
+          const createCategory = await prisma.category.create({
+            data: {
+              name: category.toLowerCase().trim(),
+              userId,
+            },
+          });
+          newCategoryId = createCategory.id;
+        } else {
+          newCategoryId = findCategory.id;
+        }
       }
     } else {
       const nameless = await prisma.category.findFirst({

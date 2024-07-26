@@ -1,5 +1,4 @@
 import { Card, CardBody, CardHeader } from "@nextui-org/react";
-import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 import { BsGraphDownArrow } from "react-icons/bs";
 import { BsGraphUpArrow } from "react-icons/bs";
 import { GoGraph } from "react-icons/go";

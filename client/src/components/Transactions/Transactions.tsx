@@ -43,6 +43,7 @@ import Export from "./Export";
 import ToggleCardBody from "../ui/ToggleCardBody/ToggleCard";
 import { VscTable } from "react-icons/vsc";
 import ToggleCard from "../ui/ToggleCardBody/ToggleCard";
+import Populate from "./Populate";
 
 export interface ITransactionFormItem {
   name: string;
@@ -54,7 +55,7 @@ export interface ITransactionFormItem {
 
 export const TransactionsList = () => {
   const { data } = useGetAllTransactionsQuery();
-  const [deleteTransaction] = useDeleteTransactionMutation();
+  const [deleteTransaction, status] = useDeleteTransactionMutation();
   const [edit, setEdit] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [remove, setRemove] = useState<string[]>([]);
@@ -203,8 +204,11 @@ export const TransactionsList = () => {
             <DeleteMany
               handleDeleteMany={handleDeleteMany}
               count={remove.length}
+              isLoading={status.isLoading}
+              isSuccess={status.isSuccess}
             />
           )}
+          {allTransactions.length === 0 && <Populate />}
         </div>
 
         <div className="flex gap-3 justify-between flex-col sm:flex-row">

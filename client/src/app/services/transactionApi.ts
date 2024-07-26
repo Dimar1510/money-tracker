@@ -8,6 +8,7 @@ type GetTransactions = {
 };
 
 export const transactionApi = api.injectEndpoints({
+  overrideExisting: true,
   endpoints: (build) => ({
     createTransaction: build.mutation<
       Transaction,
@@ -47,6 +48,14 @@ export const transactionApi = api.injectEndpoints({
       }),
       invalidatesTags: ["transaction", "category"],
     }),
+
+    populate: build.mutation<void, void>({
+      query: () => ({
+        url: "/transactions/populate",
+        method: "POST",
+      }),
+      invalidatesTags: ["transaction", "category"],
+    }),
   }),
 });
 
@@ -55,6 +64,7 @@ export const {
   useCreateTransactionMutation,
   useDeleteTransactionMutation,
   useUpdateTransactionMutation,
+  usePopulateMutation,
 } = transactionApi;
 export const {
   endpoints: {
@@ -62,5 +72,6 @@ export const {
     getAllTransactions,
     deleteTransaction,
     updateTransaction,
+    populate,
   },
 } = transactionApi;

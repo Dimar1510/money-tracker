@@ -65,7 +65,7 @@ const BalanceChart = () => {
 
   if (transactions && balanceChartData.length < 1)
     return (
-      <Card>
+      <Card className="flex-1">
         <CardHeader className="justify-between">
           <h3>График расходов</h3>
         </CardHeader>
