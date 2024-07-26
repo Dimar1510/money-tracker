@@ -3,6 +3,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { ValueFormatterParams, _capitalise } from "ag-grid-community";
 import type { CustomCellRendererProps } from "@ag-grid-community/react";
+import { IoSettingsOutline } from "react-icons/io5";
 
 const dateFormatter = (params: ValueFormatterParams): string => {
   return new Date(params.value).toLocaleDateString("ru-ru", {
@@ -11,6 +12,16 @@ const dateFormatter = (params: ValueFormatterParams): string => {
     month: "short",
     day: "numeric",
   });
+};
+
+const CustomHeader = () => {
+  return (
+    <div className="flex items-center justify-center mx-auto">
+      <span className="custom-header-icon">
+        <IoSettingsOutline size={20} />
+      </span>
+    </div>
+  );
 };
 
 export const columnDefs = ({
@@ -23,9 +34,11 @@ export const columnDefs = ({
   return [
     {
       field: "",
+      headerName: "",
       cellRenderer: ActionsCellRenderer,
       width: 80,
       resizable: false,
+      headerComponent: CustomHeader,
     },
     {
       headerName: "Название",
@@ -46,7 +59,7 @@ export const columnDefs = ({
     {
       headerName: "Сумма",
       field: "amount",
-      minWidth: 150,
+      minWidth: 100,
       flex: 1,
       filter: "agNumberColumnFilter",
       valueFormatter: (params: ValueFormatterParams) => {
