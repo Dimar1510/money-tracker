@@ -15,13 +15,16 @@ const App = () => {
     <NextUIProvider navigate={navigate}>
       <ThemeProvider>
         <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/*" element={<NotFound />} />
-        </Routes>
+        <div className="flex-1 w-full">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/*" element={<NotFound />} />
+          </Routes>
+        </div>
+
         <Footer />
       </ThemeProvider>
     </NextUIProvider>

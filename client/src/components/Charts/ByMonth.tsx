@@ -7,12 +7,13 @@ import { ru } from "date-fns/locale";
 import { ThemeContext } from "../ThemeProvider";
 import { Card, CardHeader } from "@nextui-org/react";
 setDefaultOptions({ locale: ru });
-import ToggleCardBody from "../ui/ToggleCardBody/ToggleCard";
+import { AgCartesianAxisOptions } from "ag-charts-community";
 import { format } from "date-fns";
 import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
 import ChartNavigation from "./ChartNavigation";
 import { MdOutlineStackedBarChart } from "react-icons/md";
 import ToggleCard from "../ui/ToggleCardBody/ToggleCard";
+import { AgBarSeriesTooltipRendererParams } from "ag-charts-community";
 
 interface ISeries {
   type: "bar";
@@ -21,6 +22,7 @@ interface ISeries {
   yName: string;
   stacked?: boolean;
   normalizedTo?: number;
+  tooltip: any;
 }
 
 interface IMonth {
@@ -76,6 +78,13 @@ const ByMonth = () => {
                   : _capitalise(category.name),
               stacked: true,
               normalizedTo: 100,
+              tooltip: {
+                renderer: (params: AgBarSeriesTooltipRendererParams<any>) => {
+                  return {
+                    content: `₽ ${params.datum[params.yKey].toLocaleString()}`,
+                  };
+                },
+              },
             });
             seriesMap.set(category.name, true);
           }
@@ -115,7 +124,7 @@ const ByMonth = () => {
         cardTitle="Расходы"
         icon={<MdOutlineStackedBarChart />}
       >
-        <div className="slider-container px-4 pb-4">
+        <div className="slider-container">
           <AgCharts
             options={{
               subtitle: {
@@ -125,6 +134,22 @@ const ByMonth = () => {
               series: year.series,
               theme: theme === "dark" ? "ag-default-dark" : "ag-default",
               background: { visible: false },
+              axes: [
+                {
+                  type: "category",
+                  position: "bottom",
+                },
+                {
+                  type: "number",
+
+                  position: "left",
+                  label: {
+                    formatter: (params) => {
+                      return params.value + "%";
+                    },
+                  },
+                },
+              ] as AgCartesianAxisOptions[],
             }}
             className="h-[450px]"
           />

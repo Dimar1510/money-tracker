@@ -20,11 +20,14 @@ const Dashboard = () => {
 
   if (current)
     return (
-      <div className="flex gap-8 flex-col p-8 flex-1 max-w-[1200px] w-full">
+      <div className="flex gap-8 flex-col p-8 flex-1 max-w-[1400px] w-full mx-auto">
         <InfoCards />
         <TransactionsList />
-        <BalanceChart />
-        <ByMonth />
+        <div className="flex gap-8">
+          <BalanceChart />
+          <ByMonth />
+        </div>
+
         <ByCategory />
       </div>
     );

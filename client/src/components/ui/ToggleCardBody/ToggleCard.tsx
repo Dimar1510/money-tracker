@@ -18,17 +18,24 @@ const ToggleCard: FC<IProps> = ({ cardKey, cardTitle, children, icon }) => {
   const grid = useAppSelector(selectGrid);
 
   return (
-    <Card shadow="sm">
-      <CardHeader className="justify-between">
+    <Card shadow="sm" className="flex-1 h-fit">
+      <CardHeader
+        className={`group justify-between ${
+          !grid[cardKey] && "cursor-pointer"
+        }`}
+        onClick={grid[cardKey] ? () => {} : () => toggleCard(cardKey)}
+      >
         <h3 className="flex gap-2 items-center">
           {icon}
           {cardTitle}
         </h3>
         <button
           onClick={() => toggleCard(cardKey)}
-          className="hover:text-primary"
+          className={`hover:text-primary ${
+            !grid[cardKey] && "group-hover:text-primary"
+          }`}
         >
-          {grid[cardKey] ? <FaRegEyeSlash /> : <FaRegEye />}
+          {grid[cardKey] ? <FaRegEyeSlash size={20} /> : <FaRegEye size={20} />}
         </button>
       </CardHeader>
       {grid[cardKey] && children}

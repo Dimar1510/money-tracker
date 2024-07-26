@@ -5,6 +5,7 @@ import { BsGraphUpArrow } from "react-icons/bs";
 import { GoGraph } from "react-icons/go";
 import { ReactElement } from "react";
 import { FaRubleSign } from "react-icons/fa";
+import { useGetTotal } from "src/utils/getTotal";
 
 const InfoCard = ({
   amount,
@@ -24,7 +25,7 @@ const InfoCard = ({
       <CardBody className="items-center">
         <p className="flex items-center gap-1">
           <FaRubleSign />
-          {amount}
+          {amount.toLocaleString()}
         </p>
       </CardBody>
     </Card>
@@ -32,31 +33,22 @@ const InfoCard = ({
 };
 
 const InfoCards = () => {
-  const { data } = useGetAllTransactionsQuery();
-  let income = 0;
-  let expense = 0;
-  data?.transactions.forEach((item) => {
-    if (item.type === "income") {
-      income += item.amount;
-    } else {
-      expense += item.amount;
-    }
-  });
+  const { balance, expense, income } = useGetTotal();
   return (
     <div className="flex justify-between gap-8">
       <InfoCard
         title="Баланс"
-        amount={income - expense}
+        amount={balance}
         icon={<GoGraph className="text-primary" />}
       />
       <InfoCard
         title="Расходы"
-        amount={income}
+        amount={expense}
         icon={<BsGraphDownArrow className="text-danger-500" />}
       />
       <InfoCard
         title="Доходы"
-        amount={expense}
+        amount={income}
         icon={<BsGraphUpArrow className="text-success-500" />}
       />
     </div>

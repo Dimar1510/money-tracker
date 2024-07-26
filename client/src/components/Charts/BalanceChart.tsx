@@ -78,7 +78,7 @@ const BalanceChart = () => {
   if (year)
     return (
       <ToggleCard cardKey="balance" cardTitle="Общий график" icon={<GoGraph />}>
-        <div className="slider-container px-4 pb-4">
+        <div className="slider-container">
           <AgCharts
             options={{
               subtitle: {
@@ -110,6 +110,12 @@ const BalanceChart = () => {
                   keys: ["expense"],
                   title: {
                     text: "Расходы в месяц",
+                    color: "#63b1ff",
+                  },
+                  label: {
+                    formatter: (params) => {
+                      return "₽ " + params.value.toLocaleString();
+                    },
                   },
                 },
                 {
@@ -118,6 +124,12 @@ const BalanceChart = () => {
                   keys: ["balance"],
                   title: {
                     text: "Баланс",
+                    color: "orange",
+                  },
+                  label: {
+                    formatter: (params) => {
+                      return "₽ " + params.value.toLocaleString();
+                    },
                   },
                 },
               ] as AgCartesianAxisOptions[],

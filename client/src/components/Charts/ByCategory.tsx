@@ -8,10 +8,11 @@ import {
 import { Card, CardHeader } from "@nextui-org/react";
 import { ThemeContext } from "../ThemeProvider";
 import { _capitalise } from "ag-grid-community";
-import ToggleCardBody from "../ui/ToggleCardBody/ToggleCard";
 import CategoryList from "../CategoryList/CategoryList";
 import { GrPieChart } from "react-icons/gr";
 import ToggleCard from "../ui/ToggleCardBody/ToggleCard";
+import { useGetTotal } from "src/utils/getTotal";
+
 const useChartData = (
   data: ICategory[] | undefined,
   type: "expense" | "income"
@@ -40,12 +41,10 @@ const useChartData = (
 const getChartOptions = (
   data: { category: string; total: number }[],
   title: string,
-  theme: string
+  theme: string,
+  amount: number
 ): AgChartOptions => ({
   data,
-  title: {
-    text: title,
-  },
   theme: theme === "dark" ? "ag-default-dark" : "ag-default",
   background: { visible: false },
   legend: {
@@ -57,6 +56,25 @@ const getChartOptions = (
       calloutLabelKey: "category",
       angleKey: "total",
       innerRadiusRatio: 0.6,
+      tooltip: {
+        renderer: (params) => {
+          return {
+            content: `₽ ${params.datum[params.angleKey].toLocaleString()}`,
+          };
+        },
+      },
+      innerLabels: [
+        {
+          text: title,
+          fontWeight: "bold",
+        },
+        {
+          text: `₽ ${amount.toLocaleString()}`,
+          color: "#ffffff",
+          spacing: 10,
+          fontSize: 15,
+        },
+      ],
     },
   ],
 });
@@ -64,7 +82,7 @@ const getChartOptions = (
 const ByCategory = () => {
   const { data } = useGetAllCategoriesQuery();
   const { theme } = useContext(ThemeContext);
-
+  const { expense, income } = useGetTotal();
   const expenseChartData = useChartData(data, "expense");
   const incomeChartData = useChartData(data, "income");
 
@@ -93,12 +111,22 @@ const ByCategory = () => {
         <div className="flex justify-center gap-8">
           <div className="flex-1">
             <AgCharts
-              options={getChartOptions(expenseChartData, "Расходы", theme)}
+              options={getChartOptions(
+                expenseChartData,
+                "Расходы",
+                theme,
+                expense
+              )}
             />
           </div>
           <div className="flex-1">
             <AgCharts
-              options={getChartOptions(incomeChartData, "Доходы", theme)}
+              options={getChartOptions(
+                incomeChartData,
+                "Доходы",
+                theme,
+                income
+              )}
             />
           </div>
         </div>
