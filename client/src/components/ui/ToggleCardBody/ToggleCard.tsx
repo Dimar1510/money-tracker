@@ -18,7 +18,7 @@ const ToggleCard: FC<IProps> = ({ cardKey, cardTitle, children, icon }) => {
   const grid = useAppSelector(selectGrid);
 
   return (
-    <Card shadow="sm" className="flex-1 h-fit">
+    <Card shadow="sm" className="flex-1 h-fit" id={cardKey}>
       <CardHeader
         className={`group justify-between ${
           !grid[cardKey] && "cursor-pointer"

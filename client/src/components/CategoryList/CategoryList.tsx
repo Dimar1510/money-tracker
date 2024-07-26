@@ -5,7 +5,6 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
@@ -18,7 +17,6 @@ import {
 } from "src/app/services/categoryApi";
 import { _capitalise } from "ag-grid-community";
 import {
-  MdAdd,
   MdDeleteOutline,
   MdOutlineCancel,
   MdOutlineEdit,
@@ -44,6 +42,7 @@ const CategoryList: FC<IProps> = ({ data }) => {
   const handleSelectionChange = (key: React.Key | null) => {
     setDeleteItem(null);
     setEdit(null);
+    setError("");
     if (key !== null) {
       setValue(key as string);
     }
@@ -60,6 +59,7 @@ const CategoryList: FC<IProps> = ({ data }) => {
         } else {
           try {
             if (newName) await updateCategory({ name: newName, id });
+            setError("");
           } catch (error) {
             if (hasErrorField(error)) {
               setError(error.data.error);
@@ -69,6 +69,8 @@ const CategoryList: FC<IProps> = ({ data }) => {
             setEdit(null);
           }
         }
+      } else {
+        setEdit(null);
       }
     }
   };
@@ -79,6 +81,7 @@ const CategoryList: FC<IProps> = ({ data }) => {
       const id = category.id;
       try {
         await deleteCategory(id);
+        setError("");
       } catch (error) {
         if (hasErrorField(error)) {
           setError(error.data.error);
@@ -117,7 +120,7 @@ const CategoryList: FC<IProps> = ({ data }) => {
             className={`${theme} text-foreground pb-4`}
           >
             <ModalContent>
-              {(onClose) => (
+              {() => (
                 <>
                   <ModalHeader className="flex flex-col gap-1 items-center">
                     Мои категории
@@ -185,20 +188,32 @@ const CategoryList: FC<IProps> = ({ data }) => {
                           )}
                           {edit !== null ? (
                             <div className="flex gap-3">
-                              <button onClick={() => setEdit(null)}>
-                                <MdOutlineCancel />
+                              <button
+                                onClick={() => setEdit(null)}
+                                className="hover:text-default-500"
+                              >
+                                <MdOutlineCancel size={25} />
                               </button>
-                              <button onClick={handleSave}>
-                                <FiSave />
+                              <button
+                                onClick={handleSave}
+                                className="hover:text-primary"
+                              >
+                                <FiSave size={25} />
                               </button>
                             </div>
                           ) : (
                             <div className="flex gap-3">
-                              <button onClick={() => setEdit(value)}>
-                                <MdOutlineEdit />
+                              <button
+                                onClick={() => setEdit(value)}
+                                className="hover:text-primary"
+                              >
+                                <MdOutlineEdit size={25} />
                               </button>
-                              <button onClick={() => setDeleteItem(value)}>
-                                <MdDeleteOutline />
+                              <button
+                                onClick={() => setDeleteItem(value)}
+                                className="hover:text-danger-500"
+                              >
+                                <MdDeleteOutline size={25} />
                               </button>
                             </div>
                           )}

@@ -11,24 +11,31 @@ const InfoCard = ({
   amount,
   title,
   icon,
+  href,
 }: {
   amount: number;
   title: string;
   icon: ReactElement;
+  href: string;
 }) => {
   return (
-    <Card className="max-w-[400px] flex-1 items-center" shadow="sm">
-      <CardHeader className="justify-center gap-2 items-center">
-        {icon}
-        <h3 className="text-md">{title}</h3>
-      </CardHeader>
-      <CardBody className="items-center">
-        <p className="flex items-center gap-1">
-          <FaRubleSign />
-          {amount.toLocaleString()}
-        </p>
-      </CardBody>
-    </Card>
+    <a
+      className="max-w-[400px] flex-1 items-center hover:scale-105 will-change-transform transition-transform"
+      href={"#" + href}
+    >
+      <Card shadow="sm">
+        <CardHeader className="justify-center gap-2 items-center">
+          {icon}
+          <h3 className="text-md">{title}</h3>
+        </CardHeader>
+        <CardBody className="items-center">
+          <p className="flex items-center gap-1">
+            <FaRubleSign />
+            {amount.toLocaleString()}
+          </p>
+        </CardBody>
+      </Card>
+    </a>
   );
 };
 
@@ -37,16 +44,19 @@ const InfoCards = () => {
   return (
     <div className="flex justify-between gap-8">
       <InfoCard
+        href="balance"
         title="Баланс"
         amount={balance}
         icon={<GoGraph className="text-primary" />}
       />
       <InfoCard
+        href="byYear"
         title="Расходы"
         amount={expense}
         icon={<BsGraphDownArrow className="text-danger-500" />}
       />
       <InfoCard
+        href="byCategory"
         title="Доходы"
         amount={income}
         icon={<BsGraphUpArrow className="text-success-500" />}
