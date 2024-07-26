@@ -17,7 +17,7 @@ const Header = () => {
         <NavLink to={"/"}>
           <h1 className="font-bold text-sm xs:text-medium sm:text-xl flex flex-wrap">
             <span className="text-default-500">Finance</span>
-            <span className="text-default-800">Tracker</span>
+            <span className="text-primary">Tracker</span>
           </h1>
         </NavLink>
         <ul className="flex gap-4 items-center">

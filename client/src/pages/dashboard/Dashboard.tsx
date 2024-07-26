@@ -20,10 +20,10 @@ const Dashboard = () => {
 
   if (current)
     return (
-      <div className="flex gap-8 flex-col p-8 flex-1 max-w-[1400px] w-full mx-auto">
+      <div className="flex gap-2 sm:gap-8 flex-col p-2 sm:p-8 flex-1 max-w-[1400px] w-full mx-auto">
         <InfoCards />
         <TransactionsList />
-        <div className="flex gap-8">
+        <div className="flex gap-2 sm:gap-8 flex-col lg:flex-row">
           <BalanceChart />
           <ByMonth />
         </div>

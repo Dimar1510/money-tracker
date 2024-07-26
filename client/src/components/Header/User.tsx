@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "src/app/hooks";
 import { useCurrentQuery } from "src/app/services/userApi";
 import { logout } from "src/app/userSlice";
+import { CgProfile } from "react-icons/cg";
 
 const User = () => {
   const { data } = useCurrentQuery();
@@ -23,9 +24,12 @@ const User = () => {
     return (
       <Dropdown placement="bottom-end">
         <DropdownTrigger>
-          <span className="cursor-pointer border-default-500 border rounded-lg py-1 px-4 hover:bg-default-900 hover:text-default-300">
-            {data.name} {">"}
-          </span>
+          <div className="cursor-pointer group">
+            <CgProfile
+              size={35}
+              className="group-hover:text-primary transition-colors"
+            />
+          </div>
         </DropdownTrigger>
         <DropdownMenu
           aria-label="Profile Actions"

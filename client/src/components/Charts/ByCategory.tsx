@@ -5,7 +5,7 @@ import {
   ICategory,
   useGetAllCategoriesQuery,
 } from "src/app/services/categoryApi";
-import { Card, CardHeader } from "@nextui-org/react";
+import { Card, CardHeader, Divider } from "@nextui-org/react";
 import { ThemeContext } from "../ThemeProvider";
 import { _capitalise } from "ag-grid-community";
 import CategoryList from "../CategoryList/CategoryList";
@@ -108,9 +108,10 @@ const ByCategory = () => {
       icon={<GrPieChart />}
     >
       <div className="flex flex-col gap-4">
-        <div className="flex justify-center gap-8">
+        <div className="flex justify-center lg:gap-8 flex-col lg:flex-row">
           <div className="flex-1">
             <AgCharts
+              className="min-h-[400px] xs:min-h-fit"
               options={getChartOptions(
                 expenseChartData,
                 "Расходы",
@@ -119,8 +120,14 @@ const ByCategory = () => {
               )}
             />
           </div>
+          <Divider
+            orientation="vertical"
+            className="h-[300px] my-auto hidden lg:block"
+          />
+          <Divider className="lg:hidden w-2/3 mx-auto" />
           <div className="flex-1">
             <AgCharts
+              className="min-h-[400px] xs:min-h-fit"
               options={getChartOptions(
                 incomeChartData,
                 "Доходы",

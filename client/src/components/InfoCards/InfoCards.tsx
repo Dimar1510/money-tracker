@@ -20,7 +20,7 @@ const InfoCard = ({
 }) => {
   return (
     <a
-      className="max-w-[400px] flex-1 items-center hover:scale-105 will-change-transform transition-transform"
+      className="flex-1 items-center hover:scale-105 will-change-transform transition-transform"
       href={"#" + href}
     >
       <Card shadow="sm">
@@ -42,7 +42,7 @@ const InfoCard = ({
 const InfoCards = () => {
   const { balance, expense, income } = useGetTotal();
   return (
-    <div className="flex justify-between gap-8">
+    <div className="flex justify-between gap-2 sm:gap-8 flex-col sm:flex-row">
       <InfoCard
         href="balance"
         title="Баланс"

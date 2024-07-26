@@ -118,6 +118,7 @@ const CategoryList: FC<IProps> = ({ data }) => {
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             className={`${theme} text-foreground pb-4`}
+            placement="top-center"
           >
             <ModalContent>
               {() => (

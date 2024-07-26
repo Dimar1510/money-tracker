@@ -185,9 +185,9 @@ export const TransactionsList = () => {
       icon={<VscTable />}
     >
       <div className="w-full flex flex-col gap-3 flex-1 px-6 pb-6 pt-2">
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-3 flex-col xs:flex-row">
           <Button
-            className="self-start text-default-100 font-medium"
+            className="self-start text-default-100 font-medium w-full xs:w-fit"
             color="primary"
             onPress={() => {
               onOpen();
@@ -207,7 +207,7 @@ export const TransactionsList = () => {
           )}
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex gap-3 justify-between flex-col sm:flex-row">
           <div className="flex gap-2 items-center">
             <Input
               type="text"
@@ -240,6 +240,7 @@ export const TransactionsList = () => {
           isOpen={isOpen}
           onOpenChange={onOpenChange}
           className={`${theme} text-foreground`}
+          placement="top-center"
         >
           <ModalContent>
             {(onClose) => (

@@ -111,8 +111,10 @@ const BalanceChart = () => {
                   title: {
                     text: "Расходы в месяц",
                     color: "#63b1ff",
+                    enabled: !window.matchMedia("(max-width: 600px)").matches,
                   },
                   label: {
+                    fontSize: 10,
                     formatter: (params) => {
                       return "₽ " + params.value.toLocaleString();
                     },
@@ -125,8 +127,10 @@ const BalanceChart = () => {
                   title: {
                     text: "Баланс",
                     color: "orange",
+                    enabled: !window.matchMedia("(max-width: 600px)").matches,
                   },
                   label: {
+                    fontSize: 10,
                     formatter: (params) => {
                       return "₽ " + params.value.toLocaleString();
                     },

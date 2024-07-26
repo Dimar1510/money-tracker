@@ -22,6 +22,12 @@ export const columnDefs = ({
 }) => {
   return [
     {
+      field: "",
+      cellRenderer: ActionsCellRenderer,
+      width: 80,
+      resizable: false,
+    },
+    {
       headerName: "Название",
       field: "name",
       minWidth: 120,
@@ -65,12 +71,6 @@ export const columnDefs = ({
       flex: 1,
       filter: "agDateColumnFilter",
       valueFormatter: dateFormatter,
-    },
-    {
-      field: "",
-      cellRenderer: ActionsCellRenderer,
-      width: 80,
-      resizable: false,
     },
   ];
 };
