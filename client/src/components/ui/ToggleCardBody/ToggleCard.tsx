@@ -1,5 +1,6 @@
-import { CardHeader } from "@nextui-org/react";
+import { Card, CardHeader } from "@nextui-org/react";
 import React, { FC, ReactElement } from "react";
+import { IconType } from "react-icons";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { selectGrid } from "src/app/gridSlice";
 import { useAppSelector } from "src/app/hooks";
@@ -9,16 +10,20 @@ interface IProps {
   cardKey: string;
   cardTitle: string;
   children: ReactElement;
+  icon: ReactElement;
 }
 
-const ToggleCardBody: FC<IProps> = ({ cardKey, cardTitle, children }) => {
+const ToggleCard: FC<IProps> = ({ cardKey, cardTitle, children, icon }) => {
   const { toggleCard } = useActions();
   const grid = useAppSelector(selectGrid);
 
   return (
-    <>
+    <Card shadow="sm">
       <CardHeader className="justify-between">
-        <h3>{cardTitle}</h3>
+        <h3 className="flex gap-2 items-center">
+          {icon}
+          {cardTitle}
+        </h3>
         <button
           onClick={() => toggleCard(cardKey)}
           className="hover:text-primary"
@@ -27,8 +32,8 @@ const ToggleCardBody: FC<IProps> = ({ cardKey, cardTitle, children }) => {
         </button>
       </CardHeader>
       {grid[cardKey] && children}
-    </>
+    </Card>
   );
 };
 
-export default ToggleCardBody;
+export default ToggleCard;

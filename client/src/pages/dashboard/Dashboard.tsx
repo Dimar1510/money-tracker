@@ -22,10 +22,10 @@ const Dashboard = () => {
     return (
       <div className="flex gap-8 flex-col p-8 flex-1 max-w-[1200px] w-full">
         <InfoCards />
+        <TransactionsList />
         <BalanceChart />
         <ByMonth />
         <ByCategory />
-        <TransactionsList />
       </div>
     );
 };

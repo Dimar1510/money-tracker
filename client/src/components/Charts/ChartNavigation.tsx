@@ -31,12 +31,18 @@ const ChartNavigation = ({
   return (
     <div className="flex justify-center flex-1 items-center gap-2">
       <div className="flex items-center gap-4">
-        <button type="button" onClick={handleLeftClick}>
-          <FaChevronLeft size={20} />
+        <button type="button" onClick={handleLeftClick} className="">
+          <FaChevronLeft
+            size={20}
+            className="text-primary hover:-translate-x-1 transition-transform"
+          />
         </button>
-        <span className="text-xl">{year}г.</span>
-        <button type="button" onClick={handleRightClick}>
-          <FaChevronRight size={20} />
+        <span className="text-xl ">{year}г.</span>
+        <button type="button" onClick={handleRightClick} className="">
+          <FaChevronRight
+            size={20}
+            className="text-primary hover:translate-x-1 transition-transform"
+          />
         </button>
       </div>
     </div>

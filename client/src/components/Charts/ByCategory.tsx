@@ -8,9 +8,10 @@ import {
 import { Card, CardHeader } from "@nextui-org/react";
 import { ThemeContext } from "../ThemeProvider";
 import { _capitalise } from "ag-grid-community";
-import ToggleCardBody from "../ui/ToggleCardBody/ToggleCardBody";
+import ToggleCardBody from "../ui/ToggleCardBody/ToggleCard";
 import CategoryList from "../CategoryList/CategoryList";
-
+import { GrPieChart } from "react-icons/gr";
+import ToggleCard from "../ui/ToggleCardBody/ToggleCard";
 const useChartData = (
   data: ICategory[] | undefined,
   type: "expense" | "income"
@@ -83,27 +84,29 @@ const ByCategory = () => {
   }
 
   return (
-    <Card>
-      <ToggleCardBody cardKey="byCategory" cardTitle="Категории транзакций">
-        <div className="flex flex-col gap-4">
-          <div className="flex justify-center gap-8">
-            <div className="flex-1">
-              <AgCharts
-                options={getChartOptions(expenseChartData, "Расходы", theme)}
-              />
-            </div>
-            <div className="flex-1">
-              <AgCharts
-                options={getChartOptions(incomeChartData, "Доходы", theme)}
-              />
-            </div>
+    <ToggleCard
+      cardKey="byCategory"
+      cardTitle="Категории транзакций"
+      icon={<GrPieChart />}
+    >
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-center gap-8">
+          <div className="flex-1">
+            <AgCharts
+              options={getChartOptions(expenseChartData, "Расходы", theme)}
+            />
           </div>
-          <div className="self-end pb-4 pr-4">
-            <CategoryList data={data} />
+          <div className="flex-1">
+            <AgCharts
+              options={getChartOptions(incomeChartData, "Доходы", theme)}
+            />
           </div>
         </div>
-      </ToggleCardBody>
-    </Card>
+        <div className="self-end pb-4 pr-4">
+          <CategoryList data={data} />
+        </div>
+      </div>
+    </ToggleCard>
   );
 };
 

@@ -84,6 +84,9 @@ const CategoryList: FC<IProps> = ({ data }) => {
               setEdit(null);
               setValue("");
             }}
+            color="primary"
+            variant="faded"
+            startContent={<MdOutlineEdit size={15} />}
           >
             Редактировать категории
           </Button>

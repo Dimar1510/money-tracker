@@ -4,14 +4,15 @@ import { AgCharts } from "ag-charts-react";
 import { AgCartesianAxisOptions } from "ag-charts-community";
 import { ThemeContext } from "../ThemeProvider";
 import { Card, CardHeader } from "@nextui-org/react";
-import ToggleCardBody from "../ui/ToggleCardBody/ToggleCardBody";
+import ToggleCardBody from "../ui/ToggleCardBody/ToggleCard";
 import { _capitalise } from "ag-grid-community";
 import { format, setDefaultOptions } from "date-fns";
 import { ru } from "date-fns/locale";
 setDefaultOptions({ locale: ru });
 import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
 import ChartNavigation from "./ChartNavigation";
-
+import { GoGraph } from "react-icons/go";
+import ToggleCard from "../ui/ToggleCardBody/ToggleCard";
 interface IMonth {
   month: string;
   [key: string]: string | number;
@@ -76,72 +77,70 @@ const BalanceChart = () => {
   const year = balanceChartData[slide];
   if (year)
     return (
-      <Card className="">
-        <ToggleCardBody cardKey="balance" cardTitle="Общий график">
-          <div className="slider-container px-14 pb-10">
-            <AgCharts
-              options={{
-                subtitle: {
-                  text: `Сравнение расходов и общего баланса за ${year.year}г.`,
+      <ToggleCard cardKey="balance" cardTitle="Общий график" icon={<GoGraph />}>
+        <div className="slider-container px-4 pb-4">
+          <AgCharts
+            options={{
+              subtitle: {
+                text: `Сравнение расходов и общего баланса за ${year.year}г.`,
+              },
+              data: year.months,
+              series: [
+                {
+                  type: "bar",
+                  xKey: "month",
+                  yKey: "expense",
+                  yName: "Расходы",
                 },
-                data: year.months,
-                series: [
-                  {
-                    type: "bar",
-                    xKey: "month",
-                    yKey: "expense",
-                    yName: "Расходы",
+                {
+                  type: "line",
+                  xKey: "month",
+                  yKey: "balance",
+                  yName: "Баланс",
+                },
+              ],
+              axes: [
+                {
+                  type: "category",
+                  position: "bottom",
+                },
+                {
+                  type: "number",
+                  position: "left",
+                  keys: ["expense"],
+                  title: {
+                    text: "Расходы в месяц",
                   },
-                  {
-                    type: "line",
-                    xKey: "month",
-                    yKey: "balance",
-                    yName: "Баланс",
+                },
+                {
+                  type: "number",
+                  position: "right",
+                  keys: ["balance"],
+                  title: {
+                    text: "Баланс",
                   },
-                ],
-                axes: [
-                  {
-                    type: "category",
-                    position: "bottom",
-                  },
-                  {
-                    type: "number",
-                    position: "left",
-                    keys: ["expense"],
-                    title: {
-                      text: "Расходы в месяц",
-                    },
-                  },
-                  {
-                    type: "number",
-                    position: "right",
-                    keys: ["balance"],
-                    title: {
-                      text: "Баланс",
-                    },
-                  },
-                ] as AgCartesianAxisOptions[],
-                theme: theme === "dark" ? "ag-default-dark" : "ag-default",
-                background: { visible: false },
-              }}
-              className="h-[450px]"
+                },
+              ] as AgCartesianAxisOptions[],
+              theme: theme === "dark" ? "ag-default-dark" : "ag-default",
+              background: { visible: false },
+            }}
+            className="h-[450px]"
+          />
+          <div className="flex justify-between pb-4 px-4">
+            <ChartNavigation
+              lastSlide={balanceChartData.length - 1}
+              setSlide={setSlide}
+              slide={slide}
+              year={year.year}
             />
-            <div className="flex justify-between pb-4 px-4">
-              <ChartNavigation
-                lastSlide={balanceChartData.length - 1}
-                setSlide={setSlide}
-                slide={slide}
-                year={year.year}
-              />
 
-              <HelpTooltip
-                text="Нажмите на тип, чтобы скрыть его"
-                placement="left"
-              />
-            </div>
+            <HelpTooltip
+              text="Нажмите на тип, чтобы скрыть его"
+              placement="left"
+            />
           </div>
-        </ToggleCardBody>
-      </Card>
+        </div>
+      </ToggleCard>
     );
 };
 

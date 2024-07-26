@@ -25,6 +25,7 @@ import { hasErrorField } from "src/utils/has-error-field";
 import FormTransaction from "./FormTransaction";
 import {
   Button,
+  Card,
   Input,
   Modal,
   ModalBody,
@@ -38,8 +39,10 @@ import { columnDefs } from "./columnDefs";
 import DeleteMany from "./DeleteMany";
 import { format } from "date-fns";
 import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
-import xlsx from "json-as-xlsx";
 import Export from "./Export";
+import ToggleCardBody from "../ui/ToggleCardBody/ToggleCard";
+import { VscTable } from "react-icons/vsc";
+import ToggleCard from "../ui/ToggleCardBody/ToggleCard";
 
 export interface ITransactionFormItem {
   name: string;
@@ -176,94 +179,101 @@ export const TransactionsList = () => {
   };
 
   return (
-    <div className="w-full flex flex-col gap-3 flex-1">
-      <div className="flex justify-between">
-        <Button
-          className="self-start"
-          onPress={() => {
-            onOpen();
-            reset();
-            setEdit(null);
-            setError("");
-          }}
-          startContent={<MdAdd />}
-        >
-          Добавить транзакцию
-        </Button>
-        {remove.length > 0 && (
-          <DeleteMany
-            handleDeleteMany={handleDeleteMany}
-            count={remove.length}
-          />
-        )}
-      </div>
-
-      <div className="flex justify-between">
-        <div className="flex gap-2 items-center">
-          <Input
-            type="text"
-            id="filter-text-box"
-            placeholder="Быстрый поиск..."
-            onInput={onFilterTextBoxChanged}
-            className="w-[200px]"
-          />
-          <HelpTooltip text="Формат даты: yyyy-mm-dd" placement="right" />
-        </div>
-        <Export data={allTransactions} />
-      </div>
-
-      <div
-        className={`${
-          theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine"
-        } w-full h-[400px]`}
-      >
-        <AgGridReact
-          ref={gridRef}
-          rowSelection="multiple"
-          columnDefs={columnDefs({ ActionsCellRenderer, TypeCellRenderer })}
-          rowData={allTransactions}
-          gridOptions={gridOptions}
-          suppressRowClickSelection={true}
-          onSelectionChanged={onSelectionChanged}
-        />
-      </div>
-      <Modal
-        isOpen={isOpen}
-        onOpenChange={onOpenChange}
-        className={`${theme} text-foreground`}
-      >
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader className="flex flex-col gap-1">
-                {edit ? (
-                  <div className="flex gap-1 items-center">
-                    <MdOutlineEdit /> Редактировать транзакцию
-                  </div>
-                ) : (
-                  <div className="flex gap-1 items-center">
-                    <MdAdd />
-                    Создать транзакцию
-                  </div>
-                )}
-              </ModalHeader>
-              <ModalBody>
-                <FormTransaction
-                  edit={edit}
-                  error={error}
-                  setEdit={setEdit}
-                  setError={setError}
-                  control={control}
-                  handleSubmit={handleSubmit}
-                  reset={reset}
-                  onClose={onClose}
-                />
-              </ModalBody>
-            </>
+    <ToggleCard
+      cardKey="transactions"
+      cardTitle="Все транзакции"
+      icon={<VscTable />}
+    >
+      <div className="w-full flex flex-col gap-3 flex-1 px-6 pb-6 pt-2">
+        <div className="flex justify-between">
+          <Button
+            className="self-start text-default-100 font-medium"
+            color="primary"
+            onPress={() => {
+              onOpen();
+              reset();
+              setEdit(null);
+              setError("");
+            }}
+            startContent={<MdAdd size={20} />}
+          >
+            Добавить транзакцию
+          </Button>
+          {remove.length > 0 && (
+            <DeleteMany
+              handleDeleteMany={handleDeleteMany}
+              count={remove.length}
+            />
           )}
-        </ModalContent>
-      </Modal>
-    </div>
+        </div>
+
+        <div className="flex justify-between">
+          <div className="flex gap-2 items-center">
+            <Input
+              type="text"
+              id="filter-text-box"
+              placeholder="Быстрый поиск..."
+              onInput={onFilterTextBoxChanged}
+              className="w-[200px]"
+            />
+            <HelpTooltip text="Формат даты: yyyy-mm-dd" placement="right" />
+          </div>
+          <Export data={allTransactions} />
+        </div>
+
+        <div
+          className={`${
+            theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine"
+          } w-full h-[400px]`}
+        >
+          <AgGridReact
+            ref={gridRef}
+            rowSelection="multiple"
+            columnDefs={columnDefs({ ActionsCellRenderer, TypeCellRenderer })}
+            rowData={allTransactions}
+            gridOptions={gridOptions}
+            suppressRowClickSelection={true}
+            onSelectionChanged={onSelectionChanged}
+          />
+        </div>
+        <Modal
+          isOpen={isOpen}
+          onOpenChange={onOpenChange}
+          className={`${theme} text-foreground`}
+        >
+          <ModalContent>
+            {(onClose) => (
+              <>
+                <ModalHeader className="flex flex-col gap-1">
+                  {edit ? (
+                    <div className="flex gap-1 items-center">
+                      <MdOutlineEdit /> Редактировать транзакцию
+                    </div>
+                  ) : (
+                    <div className="flex gap-1 items-center">
+                      <MdAdd />
+                      Создать транзакцию
+                    </div>
+                  )}
+                </ModalHeader>
+                <ModalBody>
+                  <FormTransaction
+                    edit={edit}
+                    error={error}
+                    setEdit={setEdit}
+                    setError={setError}
+                    control={control}
+                    handleSubmit={handleSubmit}
+                    reset={reset}
+                    onClose={onClose}
+                  />
+                </ModalBody>
+              </>
+            )}
+          </ModalContent>
+        </Modal>
+      </div>
+    </ToggleCard>
   );
 };
 

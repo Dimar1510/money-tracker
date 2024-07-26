@@ -7,10 +7,12 @@ import { ru } from "date-fns/locale";
 import { ThemeContext } from "../ThemeProvider";
 import { Card, CardHeader } from "@nextui-org/react";
 setDefaultOptions({ locale: ru });
-import ToggleCardBody from "../ui/ToggleCardBody/ToggleCardBody";
+import ToggleCardBody from "../ui/ToggleCardBody/ToggleCard";
 import { format } from "date-fns";
 import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
 import ChartNavigation from "./ChartNavigation";
+import { MdOutlineStackedBarChart } from "react-icons/md";
+import ToggleCard from "../ui/ToggleCardBody/ToggleCard";
 
 interface ISeries {
   type: "bar";
@@ -108,36 +110,38 @@ const ByMonth = () => {
   const year = expenseChartData[slide];
   if (year)
     return (
-      <Card className="">
-        <ToggleCardBody cardKey="byYear" cardTitle="Расходы">
-          <div className="slider-container px-14 pb-10">
-            <AgCharts
-              options={{
-                subtitle: {
-                  text: `Нормализация расходов по месяцам за ${year.year}г.`,
-                },
-                data: year.months,
-                series: year.series,
-                theme: theme === "dark" ? "ag-default-dark" : "ag-default",
-                background: { visible: false },
-              }}
-              className="h-[450px]"
+      <ToggleCard
+        cardKey="byYear"
+        cardTitle="Расходы"
+        icon={<MdOutlineStackedBarChart />}
+      >
+        <div className="slider-container px-4 pb-4">
+          <AgCharts
+            options={{
+              subtitle: {
+                text: `Нормализация расходов по месяцам за ${year.year}г.`,
+              },
+              data: year.months,
+              series: year.series,
+              theme: theme === "dark" ? "ag-default-dark" : "ag-default",
+              background: { visible: false },
+            }}
+            className="h-[450px]"
+          />
+          <div className="flex justify-between pb-4 px-4">
+            <ChartNavigation
+              lastSlide={expenseChartData.length - 1}
+              setSlide={setSlide}
+              slide={slide}
+              year={year.year}
             />
-            <div className="flex justify-between pb-4 px-4">
-              <ChartNavigation
-                lastSlide={expenseChartData.length - 1}
-                setSlide={setSlide}
-                slide={slide}
-                year={year.year}
-              />
-              <HelpTooltip
-                text="Нажмите на категорию, чтобы скрыть ее"
-                placement="left"
-              />
-            </div>
+            <HelpTooltip
+              text="Нажмите на категорию, чтобы скрыть ее"
+              placement="left"
+            />
           </div>
-        </ToggleCardBody>
-      </Card>
+        </div>
+      </ToggleCard>
     );
 };
 

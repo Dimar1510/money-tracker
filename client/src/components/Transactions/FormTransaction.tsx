@@ -122,7 +122,7 @@ const FormTransaction: FC<IProps> = ({
             <div className="flex gap-2">
               <Button
                 type="submit"
-                className="w-full text-black font-semibold"
+                className="w-full text-default-100 font-medium"
                 color="primary"
               >
                 Сохранить
@@ -131,7 +131,7 @@ const FormTransaction: FC<IProps> = ({
           ) : (
             <Button
               type="submit"
-              className="w-full text-black font-semibold"
+              className="w-full text-default-100 font-medium"
               color="primary"
             >
               Добавить

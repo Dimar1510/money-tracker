@@ -39,7 +39,12 @@ const Export = ({ data }: { data: Transaction[] }) => {
   };
 
   return (
-    <Button className="flex gap-2 items-center" onClick={exportToExcel}>
+    <Button
+      color="primary"
+      variant="faded"
+      className="flex gap-2 items-center"
+      onClick={exportToExcel}
+    >
       <PiMicrosoftExcelLogo size={20} />
       Сохранить таблицу
     </Button>

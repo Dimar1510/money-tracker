@@ -7,6 +7,7 @@ import Header from "./components/Header/Header";
 import { NextUIProvider } from "@nextui-org/react";
 import Dashboard from "./pages/dashboard/Dashboard";
 import ThemeProvider from "./components/ThemeProvider";
+import { Footer } from "./components/Footer/Footer";
 
 const App = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const App = () => {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/*" element={<NotFound />} />
         </Routes>
+        <Footer />
       </ThemeProvider>
     </NextUIProvider>
   );
