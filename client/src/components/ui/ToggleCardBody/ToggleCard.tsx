@@ -30,7 +30,10 @@ const ToggleCard: FC<IProps> = ({ cardKey, cardTitle, children, icon }) => {
           {cardTitle}
         </h3>
         <button
-          onClick={() => toggleCard(cardKey)}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleCard(cardKey);
+          }}
           className={`hover:text-primary ${
             !grid[cardKey] && "group-hover:text-primary"
           }`}
