@@ -2,11 +2,11 @@ import { FaGithub } from "react-icons/fa";
 
 export const Footer = () => {
   return (
-    <div className="flex group p-4 bg-default-50 w-full">
+    <div className="flex p-4 bg-default-50 w-full justify-center">
       <a
         aria-label={"Github"}
         href={"https://github.com/Dimar1510/money-tracker"}
-        className="text-text-clr inline-flex size-full rounded-lg p-1 justify-center"
+        className="text-text-clr inline-flex rounded-lg p-1 justify-center group"
         target="_blank"
         rel="noreferrer"
       >
