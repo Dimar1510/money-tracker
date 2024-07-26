@@ -15,7 +15,7 @@ const App = () => {
     <NextUIProvider navigate={navigate}>
       <ThemeProvider>
         <Header />
-        <div className="flex-1 w-full">
+        <div className="flex-1 w-full mt-14 sm:mt-0">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />

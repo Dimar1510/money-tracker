@@ -54,7 +54,7 @@ export interface ITransactionFormItem {
 }
 
 export const TransactionsList = () => {
-  const { data } = useGetAllTransactionsQuery();
+  const { data, isLoading } = useGetAllTransactionsQuery();
   const [deleteTransaction, status] = useDeleteTransactionMutation();
   const [edit, setEdit] = useState<string | null>(null);
   const [error, setError] = useState("");
@@ -208,7 +208,6 @@ export const TransactionsList = () => {
               isSuccess={status.isSuccess}
             />
           )}
-          {allTransactions.length === 0 && <Populate />}
         </div>
 
         <div className="flex gap-3 justify-between flex-col sm:flex-row">
@@ -222,7 +221,11 @@ export const TransactionsList = () => {
             />
             <HelpTooltip text="Формат даты: yyyy-mm-dd" placement="right" />
           </div>
-          <Export data={allTransactions} />
+          {allTransactions.length === 0 && !isLoading ? (
+            <Populate />
+          ) : (
+            <Export data={allTransactions} />
+          )}
         </div>
 
         <div

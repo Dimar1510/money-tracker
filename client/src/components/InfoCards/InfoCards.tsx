@@ -41,7 +41,7 @@ const InfoCard = ({
 const InfoCards = () => {
   const { balance, expense, income } = useGetTotal();
   return (
-    <div className="flex justify-between gap-2 sm:gap-8 flex-col sm:flex-row">
+    <div className="flex justify-between gap-2 sm:gap-8 flex-col xs:flex-row">
       <InfoCard
         href="balance"
         title="Баланс"

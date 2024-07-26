@@ -18,8 +18,8 @@ import normalizeString from "src/utils/normalizeString";
 interface IProps {
   error: string;
   setError: (err: string) => void;
-  edit: string | null;
-  setEdit: (id: string | null) => void;
+  edit?: string | null;
+  setEdit?: (id: string | null) => void;
   reset: () => void;
   handleSubmit: UseFormHandleSubmit<ITransactionFormItem, undefined>;
   control: Control<ITransactionFormItem, any>;
@@ -59,7 +59,7 @@ const FormTransaction: FC<IProps> = ({
           },
         }).unwrap();
       }
-      setEdit(null);
+      setEdit && setEdit(null);
       reset();
       onClose();
       setError("");
