@@ -13,6 +13,7 @@ setDefaultOptions({ locale: ru });
 import { settings } from "./SliderSettings";
 import ToggleCardBody from "../ui/ToggleCardBody/ToggleCardBody";
 import { format } from "date-fns";
+import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
 
 interface ISeries {
   type: "bar";
@@ -57,7 +58,12 @@ const ByMonth = () => {
         const newMonth: IMonth = { month: monthItemDate };
 
         monthItem.expenseCategories.forEach((category) => {
-          newMonth[category.name] = category.expense;
+          if (newMonth[category.name]) {
+            newMonth[category.name] =
+              (newMonth[category.name] as number) + category.expense;
+          } else {
+            newMonth[category.name] = category.expense;
+          }
 
           if (!seriesMap.has(category.name)) {
             newYear.series.push({
@@ -99,7 +105,7 @@ const ByMonth = () => {
   if (expenseChartData && expenseChartData.length > 0)
     return (
       <Card className="">
-        <ToggleCardBody cardKey="byYear" cardTitle="Расходы по времени">
+        <ToggleCardBody cardKey="byYear" cardTitle="Расходы">
           <div className="slider-container px-14 pb-10">
             <Slider
               {...{ ...settings, initialSlide: expenseChartData.length - 1 }}
@@ -119,6 +125,12 @@ const ByMonth = () => {
                 />
               ))}
             </Slider>
+            <div className="flex justify-end pb-4 pr-4">
+              <HelpTooltip
+                text="Нажмите на категорию, чтобы скрыть ее"
+                placement="left"
+              />
+            </div>
           </div>
         </ToggleCardBody>
       </Card>

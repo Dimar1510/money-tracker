@@ -55,7 +55,7 @@ const getChartOptions = (
       type: "donut",
       calloutLabelKey: "category",
       angleKey: "total",
-      innerRadiusRatio: 0.7,
+      innerRadiusRatio: 0.6,
     },
   ],
 });
@@ -84,25 +84,17 @@ const ByCategory = () => {
 
   return (
     <Card>
-      <ToggleCardBody cardKey="byCategory" cardTitle="По категориям">
+      <ToggleCardBody cardKey="byCategory" cardTitle="Категории транзакций">
         <div className="flex flex-col gap-4">
           <div className="flex justify-center gap-8">
             <div className="flex-1">
               <AgCharts
-                options={getChartOptions(
-                  expenseChartData,
-                  "Расходы по категориям",
-                  theme
-                )}
+                options={getChartOptions(expenseChartData, "Расходы", theme)}
               />
             </div>
             <div className="flex-1">
               <AgCharts
-                options={getChartOptions(
-                  incomeChartData,
-                  "Доходы по категориям",
-                  theme
-                )}
+                options={getChartOptions(incomeChartData, "Доходы", theme)}
               />
             </div>
           </div>

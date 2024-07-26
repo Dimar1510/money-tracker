@@ -1,7 +1,7 @@
 import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 import { useContext, useMemo } from "react";
 import { AgCharts } from "ag-charts-react";
-import { AgChartOptions } from "ag-charts-community";
+import { AgChartOptions, AgCartesianAxisOptions } from "ag-charts-community";
 import { ThemeContext } from "../ThemeProvider";
 import { Card, CardHeader } from "@nextui-org/react";
 import ToggleCardBody from "../ui/ToggleCardBody/ToggleCardBody";
@@ -13,6 +13,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 setDefaultOptions({ locale: ru });
 import { settings } from "./SliderSettings";
+import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
 
 interface IMonth {
   month: string;
@@ -27,7 +28,7 @@ interface IYear {
 const BalanceChart = () => {
   const { data: transactions } = useGetAllTransactionsQuery();
   const { theme } = useContext(ThemeContext);
-
+  let currentBalance = 0;
   const expenseChartData = useMemo(() => {
     if (!transactions || !transactions.byYearData) {
       return [];
@@ -41,11 +42,12 @@ const BalanceChart = () => {
 
       yearItem.months.forEach((monthItem) => {
         const monthItemDate = format(new Date(monthItem.month), "LLL");
+        currentBalance = currentBalance + monthItem.income - monthItem.expense;
         newYear.months.push({
           month: monthItemDate,
           expense: monthItem.expense,
           income: monthItem.income,
-          balance: monthItem.income - monthItem.expense,
+          balance: currentBalance,
         });
       });
 
@@ -70,7 +72,7 @@ const BalanceChart = () => {
 
   return (
     <Card className="">
-      <ToggleCardBody cardKey="byYear" cardTitle="Расходы по времени">
+      <ToggleCardBody cardKey="balance" cardTitle="Общий график">
         <div className="slider-container px-14 pb-10">
           <Slider
             {...{ ...settings, initialSlide: expenseChartData.length - 1 }}
@@ -84,7 +86,7 @@ const BalanceChart = () => {
                   data: year.months,
                   series: [
                     {
-                      type: "line",
+                      type: "bar",
                       xKey: "month",
                       yKey: "expense",
                       yName: "Расходы",
@@ -96,6 +98,28 @@ const BalanceChart = () => {
                       yName: "Баланс",
                     },
                   ],
+                  axes: [
+                    {
+                      type: "category",
+                      position: "bottom",
+                    },
+                    {
+                      type: "number",
+                      position: "left",
+                      keys: ["expense"],
+                      title: {
+                        text: "Расходы в месяц",
+                      },
+                    },
+                    {
+                      type: "number",
+                      position: "right",
+                      keys: ["balance"],
+                      title: {
+                        text: "Баланс",
+                      },
+                    },
+                  ] as AgCartesianAxisOptions[],
                   theme: theme === "dark" ? "ag-default-dark" : "ag-default",
                   background: { visible: false },
                 }}
@@ -103,6 +127,12 @@ const BalanceChart = () => {
               />
             ))}
           </Slider>
+          <div className="flex justify-end pb-4 pr-4">
+            <HelpTooltip
+              text="Нажмите на тип, чтобы скрыть его"
+              placement="left"
+            />
+          </div>
         </div>
       </ToggleCardBody>
     </Card>

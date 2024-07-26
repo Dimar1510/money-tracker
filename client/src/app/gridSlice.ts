@@ -1,9 +1,6 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: Record<string, boolean> = {
-  byYear: true,
-  byCategory: true,
-};
+const initialState: Record<string, boolean> = {};
 
 const gridSlice = createSlice({
   name: "grid",

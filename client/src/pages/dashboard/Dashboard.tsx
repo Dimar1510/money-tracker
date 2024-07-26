@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "src/app/hooks";
-import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 import { selectCurrent, selectIsAuthenticated } from "src/app/userSlice";
-import BalanceCard from "src/components/BalanceCard/BalanceCard";
 import BalanceChart from "src/components/Charts/BalanceChart";
 import ByCategory from "src/components/Charts/ByCategory";
 import ByMonth from "src/components/Charts/ByMonth";
-import ExpenseCard from "src/components/ExpenseCard/ExpenseCard";
-import IncomeCard from "src/components/IncomeCard/IncomeCard";
+import InfoCards from "src/components/InfoCards/InfoCards";
 import TransactionsList from "src/components/Transactions/Transactions";
 
 const Dashboard = () => {
@@ -24,11 +21,7 @@ const Dashboard = () => {
   if (current)
     return (
       <div className="flex gap-8 flex-col p-8 flex-1 max-w-[1200px] w-full">
-        <div className="flex gap-8 justify-between min-w-[280px]">
-          <BalanceCard />
-          <IncomeCard />
-          <ExpenseCard />
-        </div>
+        <InfoCards />
         <BalanceChart />
         <ByMonth />
         <ByCategory />

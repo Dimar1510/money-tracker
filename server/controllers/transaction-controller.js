@@ -241,33 +241,58 @@ const transactionController = {
 
       // Combine data
       const combinedResult = [];
-      expenseMap.forEach((expenseYearData, year) => {
+
+      // Create a set of all unique years
+      const allYears = new Set([...expenseMap.keys(), ...incomeMap.keys()]);
+
+      allYears.forEach((year) => {
+        const expenseYearData = expenseMap.get(year) || { months: [] };
         const incomeYearData = incomeMap.get(year) || { months: [] };
 
-        const combinedMonths = expenseYearData.months.map((expenseMonth) => {
-          // Find the corresponding income month or default to zero if not found
-          const incomeMonth = incomeYearData.months.find(
-            (m) => m.month === expenseMonth.month
-          ) || { month: expenseMonth.month, income: 0 };
+        // Create a map of all unique months
+        const allMonthsMap = new Map();
 
-          return {
-            month: expenseMonth.month,
-            expense: expenseMonth.expense,
-            income: incomeMonth.income || 0,
-            expenseCategories: expenseMonth.categories || [], // Include expense categories
-          };
+        expenseYearData.months.forEach((monthData) => {
+          allMonthsMap.set(monthData.month, {
+            month: monthData.month,
+            expense: monthData.expense,
+            expenseCategories: monthData.categories || [],
+            income: 0,
+          });
         });
 
-        // Push the combined year data into the result array
+        incomeYearData.months.forEach((monthData) => {
+          if (allMonthsMap.has(monthData.month)) {
+            const existingMonthData = allMonthsMap.get(monthData.month);
+            existingMonthData.income = monthData.income;
+          } else {
+            allMonthsMap.set(monthData.month, {
+              month: monthData.month,
+              expense: 0,
+              expenseCategories: [],
+              income: monthData.income,
+            });
+          }
+        });
+
+        // Convert the map back to an array and sort by month
+        const combinedMonths = Array.from(allMonthsMap.values()).sort((a, b) =>
+          a.month.localeCompare(b.month)
+        );
+
         combinedResult.push({
           year: year,
           months: combinedMonths,
         });
       });
 
+      // Sort the combined result by year
+      combinedResult.sort((a, b) => a.year.localeCompare(b.year));
+
       res.json({
         transactions,
-        byYearData: combinedResult.sort((a, b) => a.year.localeCompare(b.year)),
+        totalIncomeByYear,
+        byYearData: combinedResult,
       });
     } catch (error) {
       console.log(error);

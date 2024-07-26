@@ -37,7 +37,7 @@ import { ThemeContext } from "../ThemeProvider";
 import { columnDefs } from "./columnDefs";
 import DeleteMany from "./DeleteMany";
 import { format } from "date-fns";
-import HelpTooltip from "./HelpTooltip";
+import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
 
 export interface ITransaction {
   name: string;
@@ -196,7 +196,7 @@ export const TransactionsList = () => {
             onInput={onFilterTextBoxChanged}
             className="w-[200px]"
           />
-          <HelpTooltip />
+          <HelpTooltip text="Формат даты: yyyy-mm-dd" placement="right" />
         </div>
 
         {remove.length > 0 && (
