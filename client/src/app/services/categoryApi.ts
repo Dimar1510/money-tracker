@@ -1,5 +1,3 @@
-import { ITransaction } from "src/components/Transactions/Transactions";
-import { ByMonth, Category, Transaction, User } from "../types";
 import { api } from "./api";
 
 export interface ICategory {
@@ -18,10 +16,31 @@ export const categoryApi = api.injectEndpoints({
       }),
       providesTags: ["category"],
     }),
+
+    updateCategory: build.mutation<ICategory, { name: string; id: string }>({
+      query: ({ name, id }) => ({
+        url: `/categories/${id}`,
+        method: "PUT",
+        body: { name },
+      }),
+      invalidatesTags: ["transaction", "category"],
+    }),
+
+    deleteCategory: build.mutation<void, string>({
+      query: (id) => ({
+        url: `/categories/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["transaction", "category"],
+    }),
   }),
 });
 
-export const { useGetAllCategoriesQuery } = categoryApi;
 export const {
-  endpoints: { getAllCategories },
+  useGetAllCategoriesQuery,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
+} = categoryApi;
+export const {
+  endpoints: { getAllCategories, updateCategory, deleteCategory },
 } = categoryApi;

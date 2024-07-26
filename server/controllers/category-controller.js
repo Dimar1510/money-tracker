@@ -100,7 +100,7 @@ const categoryController = {
       });
 
       await prisma.category.delete({ where: { id } });
-      res.json("deleted");
+      res.json({ message: "category deleted" });
     } catch (error) {
       console.log(error);
       next(errorMessage(500, "Error in Get Categories"));

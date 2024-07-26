@@ -1,4 +1,4 @@
-import { ITransaction } from "src/components/Transactions/Transactions";
+import { ITransactionFormItem } from "src/components/Transactions/Transactions";
 import { ByMonth, ByYear, Category, Transaction, User } from "../types";
 import { api } from "./api";
 
@@ -9,7 +9,10 @@ type GetTransactions = {
 
 export const transactionApi = api.injectEndpoints({
   endpoints: (build) => ({
-    createTransaction: build.mutation<Transaction, { itemData: ITransaction }>({
+    createTransaction: build.mutation<
+      Transaction,
+      { itemData: ITransactionFormItem }
+    >({
       query: ({ itemData }) => ({
         url: "/transactions",
         method: "POST",
@@ -19,7 +22,7 @@ export const transactionApi = api.injectEndpoints({
     }),
     updateTransaction: build.mutation<
       Transaction,
-      { itemData: ITransaction; id: string }
+      { itemData: ITransactionFormItem; id: string }
     >({
       query: ({ itemData, id }) => ({
         url: `/transactions/${id}`,

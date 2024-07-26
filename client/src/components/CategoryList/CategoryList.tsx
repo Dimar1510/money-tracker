@@ -11,7 +11,11 @@ import {
 } from "@nextui-org/react";
 import { FC, useContext, useState } from "react";
 import { ThemeContext } from "../ThemeProvider";
-import { ICategory } from "src/app/services/categoryApi";
+import {
+  ICategory,
+  useDeleteCategoryMutation,
+  useUpdateCategoryMutation,
+} from "src/app/services/categoryApi";
 import { _capitalise } from "ag-grid-community";
 import {
   MdAdd,
@@ -21,6 +25,8 @@ import {
 } from "react-icons/md";
 import { FiSave } from "react-icons/fi";
 import normalizeString from "src/utils/normalizeString";
+import ErrorMessage from "../ui/error-message/ErrorMessage";
+import { hasErrorField } from "src/utils/has-error-field";
 interface IProps {
   data: ICategory[];
 }
@@ -31,6 +37,9 @@ const CategoryList: FC<IProps> = ({ data }) => {
   const [value, setValue] = useState<string>("");
   const [edit, setEdit] = useState<string | null>(null);
   const [deleteItem, setDeleteItem] = useState<string | null>(null);
+  const [updateCategory] = useUpdateCategoryMutation();
+  const [deleteCategory] = useDeleteCategoryMutation();
+  const [error, setError] = useState("");
   const categories: ICategory[] = [];
   const handleSelectionChange = (key: React.Key | null) => {
     setDeleteItem(null);
@@ -40,33 +49,45 @@ const CategoryList: FC<IProps> = ({ data }) => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const category = categories.find((item) => item.name === value);
     if (category) {
       const id = category.id;
       const newName = edit ? normalizeString(edit) : null;
       if (category.name !== newName) {
         if (categories.find((item) => item.name === newName)) {
-          alert("уже есть такая категория");
+          setError("Такая категория уже существует");
         } else {
-          alert(
-            `категорию под именем ${category.name} и id ${id} переименовали в ${edit}`
-          );
-          setValue("");
-          setEdit(null);
+          try {
+            if (newName) await updateCategory({ name: newName, id });
+          } catch (error) {
+            if (hasErrorField(error)) {
+              setError(error.data.error);
+            }
+          } finally {
+            setValue("");
+            setEdit(null);
+          }
         }
       }
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     const category = categories.find((item) => item.name === value);
     if (category) {
       const id = category.id;
-      alert(`категорию под именем ${category.name} и id ${id} удалили`);
-      setDeleteItem(null);
-      setValue("");
-      setEdit(null);
+      try {
+        await deleteCategory(id);
+      } catch (error) {
+        if (hasErrorField(error)) {
+          setError(error.data.error);
+        }
+      } finally {
+        setDeleteItem(null);
+        setValue("");
+        setEdit(null);
+      }
     }
   };
 
@@ -119,6 +140,7 @@ const CategoryList: FC<IProps> = ({ data }) => {
                         )}
                       </Autocomplete>
                     }
+                    <ErrorMessage error={error} />
                     {deleteItem && (
                       <div className="flex flex-col gap-4 items-center text-center">
                         <p className="text-danger-400">
