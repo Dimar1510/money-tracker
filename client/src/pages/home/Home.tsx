@@ -1,10 +1,10 @@
 import { Button, Divider, Image, Link } from "@nextui-org/react";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "src/app/hooks";
 import { selectIsAuthenticated } from "src/app/userSlice";
-import FeatureItem from "src/components/FeatureItem/FeatureItem";
 import { ThemeContext } from "src/components/ThemeProvider";
+import HomeCards from "src/components/HomeCards/HomeCards";
 
 const Home = () => {
   const isAuth = useAppSelector(selectIsAuthenticated);
@@ -15,6 +15,7 @@ const Home = () => {
       navigate("/dashboard");
     }
   }, [isAuth, navigate]);
+
   return (
     <div className="flex flex-col items-center gap-12 mt-8 max-w-[1000px] w-full mx-auto p-8">
       <div className="flex flex-col items-center gap-6">
@@ -45,43 +46,11 @@ const Home = () => {
           }
         />
       </div>
-      <div className="flex flex-col gap-16">
-        <FeatureItem
-          title="Добавляйте транзакции"
-          text=" Вносите свои расходы или доходы для ежедневного учета и Where's
-              the money сразу же добавит их в статистику."
-          image="src/assets/images/create.png"
-        />
-        <FeatureItem
-          title="Создавайте и редактируйте категории"
-          text=" Получайте общую картину трат и прибыли, разбив расходы и доходы по
-          категориям."
-          image="src/assets/images/categories.png"
-        />
-        <FeatureItem
-          title="Графики расходов"
-          text="Позволяют с легкостью отслеживать, куда и сколько денег уходит
-          каждый месяц."
-          image="src/assets/images/expense.png"
-        />
-        <FeatureItem
-          title="Скрывайте лишнее"
-          text="Если информация с какой-либо карточки в данный момент не нужна, ее
-          можно скрыть c главной страницы."
-          image="src/assets/images/hidden.png"
-        />
-        <FeatureItem
-          title="Экспорт в Excel"
-          text="Сохраните таблицу транзакций себе на устройство в формате xlsx для
-          дальнейшего анализа или сравнения."
-          image="src/assets/images/export.png"
-        />
-      </div>
+      <HomeCards />
       <Divider />
       <div className="flex flex-col items-center gap-6 w-full">
         <h1 className="text-3xl text-center">
-          Обретите ясность по своим домашним финансам вместе с Where's the
-          money.
+          Обретите ясность в своих домашних финансах вместе с Where's the money.
         </h1>
         <h2 className="text-lg text-center">
           Просматривайте свои транзакции, отслеживайте расходы по категориям и
