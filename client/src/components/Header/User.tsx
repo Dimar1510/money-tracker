@@ -3,12 +3,12 @@ import {
   Dropdown,
   DropdownItem,
   DropdownMenu,
-  DropdownSection,
   DropdownTrigger,
   Modal,
   ModalBody,
   ModalContent,
   ModalHeader,
+  Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
@@ -24,12 +24,15 @@ import { MdAdd, MdLogout } from "react-icons/md";
 import FormTransaction from "../Transactions/FormTransaction";
 import { useForm } from "react-hook-form";
 import { ITransactionFormItem } from "../Transactions/Transactions";
+import Populate from "../Transactions/Populate";
+import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 
 const User = () => {
   const { data } = useCurrentQuery();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { data: categories } = useGetAllCategoriesQuery();
+  const { data: transactions, isLoading } = useGetAllTransactionsQuery();
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [error, setError] = useState("");
   const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
@@ -47,10 +50,15 @@ const User = () => {
     navigate("/login");
   };
 
+  const isTransactionEmpty = transactions
+    ? transactions.transactions.length === 0
+    : false;
+
   if (data && categories)
     return (
       <>
         <Dropdown
+          shadow="sm"
           style={{ zIndex: 50 }}
           placement="bottom-end"
           className={`${theme} text-foreground pb-4`}
@@ -70,12 +78,7 @@ const User = () => {
             <DropdownItem key="email" className="text-center" isReadOnly={true}>
               {data.email}
             </DropdownItem>
-            <DropdownItem
-              key="create"
-              className=""
-              textValue="create"
-              isReadOnly={true}
-            >
+            <DropdownItem key="create" textValue="Создать" isReadOnly={true}>
               <Button
                 color="primary"
                 variant="light"
@@ -88,14 +91,28 @@ const User = () => {
             </DropdownItem>
             <DropdownItem
               key="edit"
-              className=""
-              textValue="edit"
+              textValue="Редактировать"
               isReadOnly={true}
-              showDivider
             >
               <CategoryList data={categories} />
             </DropdownItem>
-
+            <DropdownItem
+              key="populate"
+              textValue="Заполнить"
+              isReadOnly={true}
+              showDivider
+              className="mb-6"
+            >
+              <Tooltip
+                content="Для демонстрации приложения сначала очистите таблицу транзакций"
+                isDisabled={isTransactionEmpty}
+                placement="bottom-start"
+              >
+                <div>
+                  <Populate disabled={!isTransactionEmpty} />
+                </div>
+              </Tooltip>
+            </DropdownItem>
             <DropdownItem
               key="logout"
               color="danger"

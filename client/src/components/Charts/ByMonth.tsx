@@ -38,7 +38,7 @@ interface IYear {
 
 const ByMonth = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
-  const { data: transactions } = useGetAllTransactionsQuery();
+  const { isLoading, data: transactions } = useGetAllTransactionsQuery();
   const [slide, setSlide] = useState(0);
 
   const expenseChartData = useMemo(() => {
@@ -105,7 +105,7 @@ const ByMonth = () => {
     }
   }, [expenseChartData]);
 
-  if (expenseChartData && expenseChartData.length < 1)
+  if (!isLoading && expenseChartData.length === 0)
     return (
       <Card className="flex-1">
         <CardHeader className="justify-between">
@@ -123,6 +123,7 @@ const ByMonth = () => {
         cardKey="byYear"
         cardTitle="Расходы"
         icon={<MdOutlineStackedBarChart />}
+        isLoading={isLoading}
       >
         <div className="slider-container">
           <AgCharts

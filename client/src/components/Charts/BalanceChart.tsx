@@ -24,7 +24,7 @@ interface IYear {
 }
 
 const BalanceChart = () => {
-  const { data: transactions } = useGetAllTransactionsQuery();
+  const { data: transactions, isLoading } = useGetAllTransactionsQuery();
   const { theme } = useContext(ThemeContext);
   const [slide, setSlide] = useState(0);
   let currentBalance = 0;
@@ -63,7 +63,7 @@ const BalanceChart = () => {
     }
   }, [balanceChartData]);
 
-  if (transactions && balanceChartData.length < 1)
+  if (!isLoading && balanceChartData.length === 0)
     return (
       <Card className="flex-1">
         <CardHeader className="justify-between">
@@ -77,7 +77,12 @@ const BalanceChart = () => {
   const year = balanceChartData[slide];
   if (year)
     return (
-      <ToggleCard cardKey="balance" cardTitle="Общий график" icon={<GoGraph />}>
+      <ToggleCard
+        cardKey="balance"
+        cardTitle="Общий график"
+        icon={<GoGraph />}
+        isLoading={isLoading}
+      >
         <div className="slider-container">
           <AgCharts
             options={{

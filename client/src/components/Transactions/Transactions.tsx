@@ -31,6 +31,7 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
+  Spinner,
   useDisclosure,
 } from "@nextui-org/react";
 import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
@@ -54,10 +55,11 @@ export interface ITransactionFormItem {
 }
 
 export const TransactionsList = () => {
-  const { data, isLoading } = useGetAllTransactionsQuery();
+  const { data, isLoading, isFetching } = useGetAllTransactionsQuery();
   const [deleteTransaction, status] = useDeleteTransactionMutation();
   const [edit, setEdit] = useState<string | null>(null);
   const [error, setError] = useState("");
+  const [loadingItem, setLoadingItem] = useState("");
   const [remove, setRemove] = useState<string[]>([]);
   const gridRef = useRef<AgGridReact>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -71,10 +73,12 @@ export const TransactionsList = () => {
       },
     });
   const allTransactions = data ? data.transactions : [];
+
   const ActionsCellRenderer: FunctionComponent<CustomCellRendererProps> = ({
     node,
   }) => {
     const onRemoveClick = async () => {
+      setLoadingItem(node.data.id);
       try {
         reset();
         setEdit(null);
@@ -84,6 +88,8 @@ export const TransactionsList = () => {
         if (hasErrorField(error)) {
           setError(error.data.error);
         }
+      } finally {
+        setLoadingItem("");
       }
     };
     const onEditClick = () => {
@@ -98,6 +104,13 @@ export const TransactionsList = () => {
         node.data.category.name === "__other" ? "" : node.data.category.name
       );
     };
+
+    if (loadingItem === node.data.id)
+      return (
+        <div className="flex gap-4 items-center justify-center h-full">
+          <Spinner size="sm" className="mx-auto" />
+        </div>
+      );
 
     return (
       <div className="flex gap-4 items-center justify-center h-full">
@@ -184,6 +197,7 @@ export const TransactionsList = () => {
       cardKey="transactions"
       cardTitle="Все транзакции"
       icon={<VscTable />}
+      isLoading={isLoading}
     >
       <div className="w-full flex flex-col gap-3 flex-1 px-6 pb-6 pt-2">
         <div className="flex justify-between gap-3 flex-col xs:flex-row">
@@ -197,6 +211,7 @@ export const TransactionsList = () => {
               setError("");
             }}
             startContent={<MdAdd size={20} />}
+            isLoading={isFetching}
           >
             Добавить транзакцию
           </Button>

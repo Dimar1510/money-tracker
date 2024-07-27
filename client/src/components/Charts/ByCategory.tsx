@@ -80,13 +80,17 @@ const getChartOptions = (
 });
 
 const ByCategory = () => {
-  const { data } = useGetAllCategoriesQuery();
+  const { data, isLoading } = useGetAllCategoriesQuery();
   const { theme } = useContext(ThemeContext);
   const { expense, income } = useGetTotal();
   const expenseChartData = useChartData(data, "expense");
   const incomeChartData = useChartData(data, "income");
 
-  if (!data || data.length === 0) {
+  if (
+    !isLoading &&
+    incomeChartData.length === 0 &&
+    expenseChartData.length === 0
+  ) {
     return (
       <Card>
         <CardHeader className="justify-between">
@@ -101,48 +105,50 @@ const ByCategory = () => {
     );
   }
 
-  return (
-    <ToggleCard
-      cardKey="byCategory"
-      cardTitle="Категории транзакций"
-      icon={<GrPieChart />}
-    >
-      <div className="flex flex-col gap-4">
-        <div className="flex justify-center lg:gap-8 flex-col lg:flex-row">
-          <div className="flex-1">
-            <AgCharts
-              className="min-h-[400px] xs:min-h-fit"
-              options={getChartOptions(
-                expenseChartData,
-                "Расходы",
-                theme,
-                expense
-              )}
+  if (!isLoading && data)
+    return (
+      <ToggleCard
+        cardKey="byCategory"
+        cardTitle="Категории транзакций"
+        icon={<GrPieChart />}
+        isLoading={isLoading}
+      >
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-center lg:gap-8 flex-col lg:flex-row">
+            <div className="flex-1">
+              <AgCharts
+                className="min-h-[400px] xs:min-h-fit"
+                options={getChartOptions(
+                  expenseChartData,
+                  "Расходы",
+                  theme,
+                  expense
+                )}
+              />
+            </div>
+            <Divider
+              orientation="vertical"
+              className="h-[300px] my-auto hidden lg:block"
             />
+            <Divider className="lg:hidden w-2/3 mx-auto" />
+            <div className="flex-1">
+              <AgCharts
+                className="min-h-[400px] xs:min-h-fit"
+                options={getChartOptions(
+                  incomeChartData,
+                  "Доходы",
+                  theme,
+                  income
+                )}
+              />
+            </div>
           </div>
-          <Divider
-            orientation="vertical"
-            className="h-[300px] my-auto hidden lg:block"
-          />
-          <Divider className="lg:hidden w-2/3 mx-auto" />
-          <div className="flex-1">
-            <AgCharts
-              className="min-h-[400px] xs:min-h-fit"
-              options={getChartOptions(
-                incomeChartData,
-                "Доходы",
-                theme,
-                income
-              )}
-            />
+          <div className="self-end pb-4 pr-4">
+            <CategoryList data={data} />
           </div>
         </div>
-        <div className="self-end pb-4 pr-4">
-          <CategoryList data={data} />
-        </div>
-      </div>
-    </ToggleCard>
-  );
+      </ToggleCard>
+    );
 };
 
 export default ByCategory;

@@ -1,6 +1,5 @@
-import { Card, CardHeader } from "@nextui-org/react";
+import { Card, CardHeader, Spinner } from "@nextui-org/react";
 import React, { FC, ReactElement } from "react";
-import { IconType } from "react-icons";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { selectGrid } from "src/app/gridSlice";
 import { useAppSelector } from "src/app/hooks";
@@ -11,9 +10,16 @@ interface IProps {
   cardTitle: string;
   children: ReactElement;
   icon: ReactElement;
+  isLoading: boolean;
 }
 
-const ToggleCard: FC<IProps> = ({ cardKey, cardTitle, children, icon }) => {
+const ToggleCard: FC<IProps> = ({
+  cardKey,
+  cardTitle,
+  children,
+  icon,
+  isLoading,
+}) => {
   const { toggleCard } = useActions();
   const grid = useAppSelector(selectGrid);
 
@@ -41,7 +47,9 @@ const ToggleCard: FC<IProps> = ({ cardKey, cardTitle, children, icon }) => {
           {grid[cardKey] ? <FaRegEyeSlash size={20} /> : <FaRegEye size={20} />}
         </button>
       </CardHeader>
-      {grid[cardKey] && children}
+
+      {grid[cardKey] &&
+        (isLoading ? <Spinner size="lg" className="p-4" /> : children)}
     </Card>
   );
 };

@@ -7,14 +7,14 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { MdOutlinePlaylistAddCheck } from "react-icons/md";
 import { ThemeContext } from "../ThemeProvider";
 import { usePopulateMutation } from "src/app/services/transactionApi";
 import { hasErrorField } from "src/utils/has-error-field";
 import ErrorMessage from "../ui/error-message/ErrorMessage";
 
-const Populate = () => {
+const Populate = ({ disabled }: { disabled?: boolean }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [error, setError] = useState("");
@@ -82,12 +82,12 @@ const Populate = () => {
           )}
         </ModalContent>
       </Modal>
-
       <Button
         onPress={onOpen}
         color="success"
         variant="faded"
         startContent={<MdOutlinePlaylistAddCheck size={25} />}
+        isDisabled={disabled}
       >
         Заполнить таблицу (демонстрация приложения)
       </Button>
