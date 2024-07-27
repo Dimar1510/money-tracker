@@ -35,7 +35,7 @@ const Home = () => {
           Попробовать
         </Button>
       </div>
-      <div className="image-box flex justify-center w-full max-h-[600px] overflow-y-scroll border border-primary rounded-lg">
+      <div className="image-box flex justify-center w-full max-h-[600px] overflow-y-scroll border border-default-500 rounded-md">
         <Image
           className=""
           src={

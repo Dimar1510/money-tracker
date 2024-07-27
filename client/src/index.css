@@ -33,7 +33,7 @@ main {
 }
 
 .image-box::-webkit-scrollbar {
-  width: 0.25rem !important;
+  width: 0.4rem !important;
 }
 
 .image-box::-webkit-scrollbar-track {
