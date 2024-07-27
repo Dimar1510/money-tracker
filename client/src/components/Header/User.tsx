@@ -104,7 +104,7 @@ const User = () => {
               className="mb-6"
             >
               <Tooltip
-                content="Для демонстрации приложения сначала очистите таблицу транзакций"
+                content="Для загрузки демо очистите таблицу транзакций"
                 isDisabled={isTransactionEmpty}
                 placement="bottom-start"
               >

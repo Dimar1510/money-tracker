@@ -6,6 +6,7 @@ import { Switch } from "@nextui-org/react";
 import { FaRegMoon, FaSun } from "react-icons/fa";
 import { useContext } from "react";
 import { ThemeContext } from "../ThemeProvider";
+import { GiTakeMyMoney } from "react-icons/gi";
 
 const Header = () => {
   const isAuth = useAppSelector(selectIsAuthenticated);
@@ -13,11 +14,20 @@ const Header = () => {
   const themeSelected = theme === "light";
   return (
     <header className="bg-default-50 shadow-md w-full fixed sm:static z-50">
-      <div className="flex justify-between items-center max-w-6xl mx-auto p-3">
+      <div className="flex justify-between items-center max-w-6xl mx-auto px-4 py-1">
         <NavLink to={"/"}>
-          <h1 className="font-bold text-sm xs:text-medium sm:text-xl flex flex-wrap">
-            <span className="text-default-500">Finance</span>
-            <span className="text-primary">Tracker</span>
+          <h1 className="font-bold flex items-center gap-2">
+            <div>
+              <GiTakeMyMoney size={55} className="text-primary" />
+            </div>
+            <div className="xs:flex flex-col hidden">
+              <span className="text-default-600 uppercase text-sm sm:text-xl">
+                Where's the money?
+              </span>
+              <span className="text-default-400 text-[10px] [line-height:12px] sm:text-sm uppercase">
+                Трекер расходов и доходов
+              </span>
+            </div>
           </h1>
         </NavLink>
         <ul className="flex gap-4 items-center">
@@ -34,12 +44,12 @@ const Header = () => {
               <User />
             </>
           ) : (
-            <div className="flex flex-col xs:flex-row gap-x-4 gap-y-1">
-              <li className="hover:underline">
-                <NavLink to={"/login"}>Sign in</NavLink>
+            <div className="flex flex-row gap-x-4 gap-y-1">
+              <li className="hover:underline underline-offset-4">
+                <NavLink to={"/login"}>Вход</NavLink>
               </li>
-              <li className="hover:underline">
-                <NavLink to={"/register"}>Register</NavLink>
+              <li className="hover:underline underline-offset-4">
+                <NavLink to={"/register"}>Регистрация</NavLink>
               </li>
             </div>
           )}

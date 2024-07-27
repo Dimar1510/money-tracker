@@ -48,37 +48,37 @@ const Login = () => {
 
   return (
     <div className="p-3 max-w-lg mx-auto">
-      <h2 className="text-center my-7">Sign In</h2>
+      <h2 className="text-center my-7">Войти</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
         <FormInput
           control={control}
           name="email"
           label="Email"
           type="email"
-          required="Email required"
+          required="Введите email"
         />
         <FormInput
           control={control}
           name="password"
-          label="Password"
+          label="Пароль"
           type="password"
-          required="Password required"
+          required="Введите пароль"
         />
 
         <ErrorMessage error={error} />
         <Button
-          color="success"
+          color="primary"
           type="submit"
           isLoading={result.isLoading}
-          className="text-white font-semibold"
+          className="text-default-100 font-medium"
         >
-          Sign in
+          Войти
         </Button>
       </form>
       <div className="flex gap-2 justify-center my-3">
-        <p>Don't have an account?</p>
-        <Link to={"/register"} className="text-primary-500 font-semibold">
-          Sign up
+        <p>Еще не зарегистрированы?</p>
+        <Link to={"/register"} className="text-primary font-semibold">
+          Регистрация
         </Link>
       </div>
     </div>
