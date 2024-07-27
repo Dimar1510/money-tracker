@@ -1,4 +1,4 @@
-import { Button, Image, Link } from "@nextui-org/react";
+import { Button, Divider, Image, Link } from "@nextui-org/react";
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "src/app/hooks";
@@ -16,7 +16,7 @@ const Home = () => {
     }
   }, [isAuth, navigate]);
   return (
-    <div className="flex flex-col items-center gap-12 mt-8 max-w-[1200px] w-full mx-auto p-8">
+    <div className="flex flex-col items-center gap-12 mt-8 max-w-[1000px] w-full mx-auto p-8">
       <div className="flex flex-col items-center gap-6">
         <h1 className="text-5xl text-center">
           Организуйте <br /> свои финансы.
@@ -35,8 +35,9 @@ const Home = () => {
           Попробовать
         </Button>
       </div>
-      <div className="image-box max-h-[600px] overflow-y-scroll border border-primary rounded-lg">
+      <div className="image-box flex justify-center w-full max-h-[600px] overflow-y-scroll border border-primary rounded-lg">
         <Image
+          className=""
           src={
             theme === "dark"
               ? "src/assets/images/dark.png"
@@ -75,6 +76,28 @@ const Home = () => {
           дальнейшего анализа или сравнения."
           image="src/assets/images/export.png"
         />
+      </div>
+      <Divider />
+      <div className="flex flex-col items-center gap-6 w-full">
+        <h1 className="text-3xl text-center">
+          Обретите ясность по своим домашним финансам вместе с Where's the
+          money.
+        </h1>
+        <h2 className="text-lg text-center">
+          Просматривайте свои транзакции, отслеживайте расходы по категориям и
+          получайте ежемесячные аналитические данные, которые помогут вам лучше
+          понять свои финансовые привычки.
+        </h2>
+
+        <Button
+          as={Link}
+          href="/register"
+          size="lg"
+          color="primary"
+          className="text-default-50 font-semibold"
+        >
+          Попробовать
+        </Button>
       </div>
     </div>
   );

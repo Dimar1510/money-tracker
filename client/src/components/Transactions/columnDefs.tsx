@@ -70,6 +70,7 @@ export const columnDefs = ({
       headerName: "Категория",
       field: "category",
       minWidth: 150,
+      filter: true,
       flex: 1,
       valueFormatter: (params: ValueFormatterParams) => {
         return params.value.name === "__other"

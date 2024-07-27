@@ -23,7 +23,7 @@ const HelpTooltip = ({
     | "right-end";
 }) => {
   return (
-    <div className="z-50">
+    <div className="z-40">
       <Tooltip closeDelay={150} showArrow placement={placement} content={text}>
         <div className="text-default-500">
           <IoIosHelpCircleOutline size={30} />

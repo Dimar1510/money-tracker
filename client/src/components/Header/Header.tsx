@@ -14,23 +14,26 @@ const Header = () => {
   const themeSelected = theme === "light";
   return (
     <header className="bg-default-50 shadow-md w-full fixed z-50">
-      <div className="flex justify-between items-center max-w-6xl mx-auto px-4 py-1">
+      <div className="flex justify-between items-center max-w-6xl mx-auto px-1 xs:px-4 py-1">
         <NavLink to={"/"}>
-          <h2 className="font-bold flex items-center gap-2">
+          <h2 className="font-bold flex items-center xs:gap-2">
             <div>
               <GiTakeMyMoney size={55} className="text-primary" />
             </div>
-            <div className="xs:flex flex-col hidden">
-              <span className="text-default-600 uppercase text-sm sm:text-xl">
+            <div className="flex flex-col">
+              <span className="hidden xs:block text-default-600 uppercase text-sm sm:text-xl">
                 Where's the money?
               </span>
-              <span className="text-default-400 text-[10px] [line-height:12px] sm:text-sm uppercase">
+              <span className="text-default-600 uppercase text-lg block xs:hidden">
+                WTM?
+              </span>
+              <span className="text-default-400 text-[10px] [line-height:12px] sm:text-sm uppercase hidden xs:block">
                 Трекер расходов и доходов
               </span>
             </div>
           </h2>
         </NavLink>
-        <ul className="flex gap-4 items-center">
+        <ul className="flex xs:gap-4 items-center">
           <Switch
             isSelected={!themeSelected}
             size="md"

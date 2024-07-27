@@ -13,8 +13,8 @@ const FeatureItem = ({
 }) => {
   const { theme } = useContext(ThemeContext);
   return (
-    <div className="flex gap-16 items-center ">
-      <div className="flex-1">
+    <div className="flex gap-16 items-center flex-wrap">
+      <div className="flex-1 min-w-[300px]">
         <h3 className="text-3xl">{title}</h3>
         <p className="text-lg">{text}</p>
       </div>
