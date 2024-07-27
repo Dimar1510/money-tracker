@@ -34,6 +34,7 @@ const Export = ({ data }: { data: Transaction[] }) => {
     ];
     const settings = {
       fileName: "Мои транзакции",
+      extraLength: 3,
     };
     xlsx(excelData, settings);
   };

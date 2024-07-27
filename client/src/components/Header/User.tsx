@@ -105,6 +105,7 @@ const User = () => {
             >
               <Tooltip
                 content="Для загрузки демо очистите таблицу транзакций"
+                delay={500}
                 isDisabled={isTransactionEmpty}
                 placement="bottom-start"
               >

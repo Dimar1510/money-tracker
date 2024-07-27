@@ -32,6 +32,27 @@ main {
   min-height: 100vh;
 }
 
-.slick-dots button::before {
-  color: hsl(var(--nextui-primary)) !important;
+.image-box::-webkit-scrollbar {
+  width: 0.25rem !important;
+}
+
+.image-box::-webkit-scrollbar-track {
+  background: none !important;
+  transition: 0.5s cubic-bezier(0.075, 0.82, 0.165, 1) !important;
+}
+
+.image-box::-webkit-scrollbar-thumb {
+  background: hsl(var(--nextui-primary)) !important;
+  border-radius: 5px !important;
+}
+
+.image-box::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--nextui-primary)) !important;
+}
+
+/* scrollbar styling for firefox */
+@-moz-document url-prefix() {
+  .image-box {
+    scrollbar-color: blue orange !important;
+  }
 }

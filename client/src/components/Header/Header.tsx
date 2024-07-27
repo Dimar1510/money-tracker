@@ -13,10 +13,10 @@ const Header = () => {
   const { theme, toggleTheme } = useContext(ThemeContext);
   const themeSelected = theme === "light";
   return (
-    <header className="bg-default-50 shadow-md w-full fixed sm:static z-50">
+    <header className="bg-default-50 shadow-md w-full fixed z-50">
       <div className="flex justify-between items-center max-w-6xl mx-auto px-4 py-1">
         <NavLink to={"/"}>
-          <h1 className="font-bold flex items-center gap-2">
+          <h2 className="font-bold flex items-center gap-2">
             <div>
               <GiTakeMyMoney size={55} className="text-primary" />
             </div>
@@ -28,7 +28,7 @@ const Header = () => {
                 Трекер расходов и доходов
               </span>
             </div>
-          </h1>
+          </h2>
         </NavLink>
         <ul className="flex gap-4 items-center">
           <Switch

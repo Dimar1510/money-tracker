@@ -70,7 +70,6 @@ const getChartOptions = (
         },
         {
           text: `₽ ${amount.toLocaleString()}`,
-          color: "#ffffff",
           spacing: 10,
           fontSize: 15,
         },
