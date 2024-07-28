@@ -8,12 +8,5 @@ export default defineConfig({
       src: "/src",
     },
   },
-  server: {
-    open: true,
-  },
-  build: {
-    outDir: "build",
-    sourcemap: true,
-  },
   plugins: [react(), nodePolyfills()],
 });
