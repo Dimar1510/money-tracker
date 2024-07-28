@@ -13,8 +13,20 @@ import categoriesImg from "src/assets/images/categories.png";
 import expenseImg from "src/assets/images/expense.png";
 import hiddenImg from "src/assets/images/hidden.png";
 import exportImg from "src/assets/images/export.png";
+import createImgDark from "src/assets/images/create-dark.png";
+import categoriesImgDark from "src/assets/images/categories-dark.png";
+import expenseImgDark from "src/assets/images/expense-dark.png";
+import hiddenImgDark from "src/assets/images/hidden-dark.png";
+import exportImgDark from "src/assets/images/export-dark.png";
 
 const images = [createImg, categoriesImg, expenseImg, hiddenImg, exportImg];
+const imagesDark = [
+  createImgDark,
+  categoriesImgDark,
+  expenseImgDark,
+  hiddenImgDark,
+  exportImgDark,
+];
 
 const HomeCards: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -25,7 +37,7 @@ const HomeCards: React.FC = () => {
   const ref4 = useRef<HTMLDivElement>(null);
   const refs = [ref0, ref1, ref2, ref3, ref4];
 
-  const [src, setSrc] = useState(createImg);
+  const [src, setSrc] = useState(theme === "dark" ? imagesDark[0] : images[0]);
 
   const { scrollY } = useScroll();
 
@@ -39,7 +51,7 @@ const HomeCards: React.FC = () => {
         const elementBottom = rect.bottom + window.scrollY;
 
         if (elementTop <= stickyTop + 200 && elementBottom >= stickyTop) {
-          setSrc(images[index]);
+          setSrc(theme === "dark" ? imagesDark[index] : images[index]);
         }
       }
     });
@@ -50,8 +62,13 @@ const HomeCards: React.FC = () => {
   });
 
   useEffect(() => {
+    if (src === images[0]) {
+      setSrc(imagesDark[0]);
+    } else {
+      setSrc(images[0]);
+    }
     handleImageChange();
-  }, []);
+  }, [theme]);
 
   return (
     <motion.div
@@ -62,31 +79,31 @@ const HomeCards: React.FC = () => {
     >
       <div className="flex flex-col flex-1 gap:8 sm:gap-y-60 mb-20">
         <FeatureItem
-          image={images[0]}
+          image={theme === "dark" ? imagesDark[1] : images[1]}
           parentRef={ref0}
           title="Добавляйте транзакции"
           text="Вносите свои расходы или доходы для ежедневного учета и Where's the money сразу же добавит их в статистику."
         />
         <FeatureItem
-          image={images[1]}
+          image={theme === "dark" ? imagesDark[2] : images[2]}
           parentRef={ref1}
           title="Создавайте и редактируйте категории"
           text="Получайте общую картину трат и прибыли, разбив расходы и доходы по категориям."
         />
         <FeatureItem
-          image={images[2]}
+          image={theme === "dark" ? imagesDark[3] : images[3]}
           parentRef={ref2}
           title="Графики расходов"
           text="Позволяют с легкостью отслеживать, куда и сколько денег уходит каждый месяц."
         />
         <FeatureItem
-          image={images[3]}
+          image={theme === "dark" ? imagesDark[3] : images[3]}
           parentRef={ref3}
           title="Скрывайте лишнее"
           text="Если информация с какой-либо карточки в данный момент не нужна, ее можно скрыть c главной страницы."
         />
         <FeatureItem
-          image={images[4]}
+          image={theme === "dark" ? imagesDark[4] : images[4]}
           parentRef={ref4}
           title="Экспорт в Excel"
           text="Сохраните таблицу транзакций себе на устройство в формате xlsx для дальнейшего анализа или сравнения."
@@ -104,7 +121,7 @@ const HomeCards: React.FC = () => {
             >
               <Image
                 className="size-[350px] object-cover border border-default-500 p-2"
-                src={theme === "dark" ? src.replace(".png", "-dark.png") : src}
+                src={src}
                 alt="Feature"
               />
             </motion.div>

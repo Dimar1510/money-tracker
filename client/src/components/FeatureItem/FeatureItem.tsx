@@ -47,11 +47,7 @@ const FeatureItem = ({
       <div className="flex-1 sm:hidden">
         <Image
           className="size-[300px] object-cover border border-default-500 p-2"
-          src={
-            theme === "dark" && image
-              ? image.slice(0, -4) + "-dark" + image.slice(-4)
-              : image
-          }
+          src={image}
         />
       </div>
     </motion.div>
