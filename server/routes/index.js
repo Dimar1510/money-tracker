@@ -4,6 +4,7 @@ const {
   UserController,
   TransactionController,
   CategoryController,
+  PopulateController,
 } = require("../controllers");
 const { authenticateToken } = require("../middleware/auth");
 
@@ -34,7 +35,7 @@ router.put(
 router.post(
   "/transactions/populate",
   authenticateToken,
-  TransactionController.populate
+  PopulateController.populate
 );
 
 router.get("/categories", authenticateToken, CategoryController.getCategories);

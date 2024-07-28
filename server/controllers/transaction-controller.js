@@ -301,44 +301,6 @@ const transactionController = {
       next(errorMessage(500, "Error in Get Transactions"));
     }
   },
-
-  populate: async (req, res, next) => {
-    const userId = req.user.userId;
-    try {
-      const allTransaction = await prisma.transaction.findMany({
-        where: { userId },
-      });
-      if (allTransaction.length > 0) {
-        return res.status(400).json({ error: "Transactions are present" });
-      }
-      await prisma.transaction.deleteMany({ where: { userId } });
-      await prisma.category.deleteMany({ where: { userId } });
-      for (let transaction of mockTransactionsList) {
-        //mock data for 2023
-        if (transaction.date.startsWith("2023")) {
-          const newDate = new Date(transaction.date);
-          const newCategoryId = await categoryHandle(
-            transaction.category,
-            userId
-          );
-          await prisma.transaction.create({
-            data: {
-              name: transaction.name,
-              date: newDate.toISOString(),
-              amount: parseInt(transaction.amount),
-              categoryId: newCategoryId,
-              userId,
-              type: transaction.type,
-            },
-          });
-        }
-      }
-      res.status(201).json({ message: "transactions deleted" });
-    } catch (error) {
-      console.log(error);
-      next(errorMessage(500, "Error in Populate"));
-    }
-  },
 };
 
 module.exports = transactionController;
