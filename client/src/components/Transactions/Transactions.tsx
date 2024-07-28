@@ -39,6 +39,7 @@ import Export from "./Export";
 import { VscTable } from "react-icons/vsc";
 import ToggleCard from "../ui/ToggleCardBody/ToggleCard";
 import Populate from "./Populate";
+import toast, { Toaster } from "react-hot-toast";
 
 export interface ITransactionFormItem {
   name: string;
@@ -78,9 +79,11 @@ export const TransactionsList = () => {
         setEdit(null);
         await deleteTransaction({ ids: [node.data.id] }).unwrap();
         setError("");
+        toast.success("Транзакция удалена");
       } catch (error) {
         if (hasErrorField(error)) {
           setError(error.data.error);
+          toast.error("Произошла ошибка");
         }
       } finally {
         setLoadingItem("");
@@ -168,9 +171,11 @@ export const TransactionsList = () => {
       setEdit(null);
       await deleteTransaction({ ids: remove }).unwrap();
       setError("");
+      toast.success(`Транзакции удалены: ${remove.length} шт.`);
     } catch (error) {
       if (hasErrorField(error)) {
         setError(error.data.error);
+        toast.error("Произошла ошибка");
       }
     }
   };
@@ -185,7 +190,6 @@ export const TransactionsList = () => {
       sortGrid(event, "date", "desc");
     },
   };
-
   return (
     <ToggleCard
       cardKey="transactions"

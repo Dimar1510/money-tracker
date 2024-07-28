@@ -14,6 +14,7 @@ import { ITransactionFormItem } from "./Transactions";
 import FormSelect from "../ui/FormSelect/FormSelect";
 import FormAutocomplete from "../ui/FormAutocomplete/FormAutocomplete";
 import normalizeString from "src/utils/normalizeString";
+import toast, { Toaster } from "react-hot-toast";
 
 interface IProps {
   error: string;
@@ -50,6 +51,7 @@ const FormTransaction: FC<IProps> = ({
           },
           id: edit,
         }).unwrap();
+        toast.success("Транзакция обновлена");
       } else {
         await createTransaction({
           itemData: {
@@ -58,6 +60,7 @@ const FormTransaction: FC<IProps> = ({
             category: normalizeString(data.category),
           },
         }).unwrap();
+        toast.success("Транзакция создана");
       }
       setEdit && setEdit(null);
       reset();
@@ -66,6 +69,7 @@ const FormTransaction: FC<IProps> = ({
     } catch (error) {
       if (hasErrorField(error)) {
         setError(error.data.error);
+        toast.error("Произошла ошибка");
       }
     }
   };

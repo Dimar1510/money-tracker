@@ -13,6 +13,7 @@ import { ThemeContext } from "../ThemeProvider";
 import { usePopulateMutation } from "src/app/services/transactionApi";
 import { hasErrorField } from "src/utils/has-error-field";
 import ErrorMessage from "../ui/error-message/ErrorMessage";
+import toast from "react-hot-toast";
 
 const Populate = ({ disabled }: { disabled?: boolean }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -24,8 +25,10 @@ const Populate = ({ disabled }: { disabled?: boolean }) => {
     try {
       await populateTable().unwrap();
       onClose();
+      toast.success("Набор данных получен");
     } catch (error) {
       if (hasErrorField(error)) {
+        toast.error("Произошла ошибка");
         setError(error.data.error);
       }
     }
