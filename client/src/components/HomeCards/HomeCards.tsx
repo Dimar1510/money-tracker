@@ -38,7 +38,6 @@ const HomeCards: React.FC = () => {
   const refs = [ref0, ref1, ref2, ref3, ref4];
 
   const [src, setSrc] = useState(theme === "dark" ? imagesDark[0] : images[0]);
-
   const { scrollY } = useScroll();
 
   const handleImageChange = () => {
@@ -62,12 +61,11 @@ const HomeCards: React.FC = () => {
   });
 
   useEffect(() => {
-    if (src === images[0]) {
-      setSrc(imagesDark[0]);
-    } else {
-      setSrc(images[0]);
-    }
     handleImageChange();
+  }, [theme]);
+
+  useEffect(() => {
+    setSrc(theme === "dark" ? imagesDark[0] : images[0]);
   }, [theme]);
 
   return (
