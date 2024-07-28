@@ -93,7 +93,6 @@ const CategoryList: FC<IProps> = ({ data }) => {
       }
     }
   };
-
   if (data) {
     data.forEach((item) => {
       if (item.name !== "__other") categories.push(item);
@@ -118,7 +117,8 @@ const CategoryList: FC<IProps> = ({ data }) => {
             isOpen={isOpen}
             onOpenChange={onOpenChange}
             className={`${theme} text-foreground pb-4`}
-            placement="center"
+            placement="top-center"
+            isDismissable={false}
           >
             <ModalContent>
               {() => (
