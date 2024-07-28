@@ -8,14 +8,13 @@ import {
   useMotionValueEvent,
   useScroll,
 } from "framer-motion";
+import createImg from "src/assets/images/create.png";
+import categoriesImg from "src/assets/images/categories.png";
+import expenseImg from "src/assets/images/expense.png";
+import hiddenImg from "src/assets/images/hidden.png";
+import exportImg from "src/assets/images/export.png";
 
-const images = [
-  "src/assets/images/create.png",
-  "src/assets/images/categories.png",
-  "src/assets/images/expense.png",
-  "src/assets/images/hidden.png",
-  "src/assets/images/export.png",
-];
+const images = [createImg, categoriesImg, expenseImg, hiddenImg, exportImg];
 
 const HomeCards: React.FC = () => {
   const { theme } = useContext(ThemeContext);
@@ -26,7 +25,7 @@ const HomeCards: React.FC = () => {
   const ref4 = useRef<HTMLDivElement>(null);
   const refs = [ref0, ref1, ref2, ref3, ref4];
 
-  const [src, setSrc] = useState("src/assets/images/create.png");
+  const [src, setSrc] = useState(createImg);
 
   const { scrollY } = useScroll();
 

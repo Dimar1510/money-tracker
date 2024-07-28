@@ -5,6 +5,8 @@ import { useAppSelector } from "src/app/hooks";
 import { selectIsAuthenticated } from "src/app/userSlice";
 import { ThemeContext } from "src/components/ThemeProvider";
 import HomeCards from "src/components/HomeCards/HomeCards";
+import darkHero from "src/assets/images/dark.png";
+import hero from "src/assets/images/light.png";
 
 const Home = () => {
   const isAuth = useAppSelector(selectIsAuthenticated);
@@ -37,14 +39,7 @@ const Home = () => {
         </Button>
       </div>
       <div className="image-box flex justify-center w-full max-h-[600px] overflow-y-scroll border border-default-500 rounded-md">
-        <Image
-          className=""
-          src={
-            theme === "dark"
-              ? "src/assets/images/dark.png"
-              : "src/assets/images/light.png"
-          }
-        />
+        <Image className="" src={theme === "dark" ? darkHero : hero} />
       </div>
       <HomeCards />
       <Divider />
