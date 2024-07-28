@@ -33,7 +33,7 @@ const FormInput: React.FC<Props> = ({
     rules: {
       required,
       min: 1,
-      maxLength: 16,
+      maxLength: 64,
     },
     defaultValue: "",
   });
