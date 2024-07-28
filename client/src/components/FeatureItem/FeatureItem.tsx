@@ -35,10 +35,10 @@ const FeatureItem = ({
 
   return (
     <motion.div
-      className="flex flex-col gap-16 items-center flex-wrap mt-20"
+      className="flex flex-col gap-16 items-center flex-wrap mt-20 snap-center "
       initial="hidden"
       whileInView="visible"
-      viewport={{ amount: 0.2 }}
+      viewport={{ amount: 0.5 }}
       ref={parentRef}
     >
       <motion.div

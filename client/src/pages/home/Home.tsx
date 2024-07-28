@@ -17,7 +17,7 @@ const Home = () => {
   }, [isAuth, navigate]);
 
   return (
-    <div className="flex flex-col items-center gap-12 mt-8 max-w-[1000px] w-full mx-auto p-8">
+    <div className="flex flex-col items-center gap-20 mt-8 max-w-[1000px] w-full mx-auto p-8">
       <div className="flex flex-col items-center gap-6">
         <h1 className="text-5xl text-center">
           Организуйте <br /> свои финансы.
@@ -50,7 +50,8 @@ const Home = () => {
       <Divider />
       <div className="flex flex-col items-center gap-6 w-full">
         <h1 className="text-3xl text-center">
-          Обретите ясность в своих домашних финансах вместе с Where's the money.
+          Обретите ясность в своих домашних финансах вместе с <br />
+          Where's the money.
         </h1>
         <h2 className="text-lg text-center">
           Просматривайте свои транзакции, отслеживайте расходы по категориям и
