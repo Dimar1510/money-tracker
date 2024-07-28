@@ -26,10 +26,8 @@ const ToggleCard: FC<IProps> = ({
   return (
     <Card shadow="sm" className="flex-1 h-fit" id={cardKey}>
       <CardHeader
-        className={`group justify-between ${
-          !grid[cardKey] && "cursor-pointer"
-        }`}
-        onClick={grid[cardKey] ? () => {} : () => toggleCard(cardKey)}
+        className={`group justify-between ${grid[cardKey] && "cursor-pointer"}`}
+        onClick={!grid[cardKey] ? () => {} : () => toggleCard(cardKey)}
       >
         <h3 className="flex gap-2 items-center">
           {icon}
@@ -41,14 +39,18 @@ const ToggleCard: FC<IProps> = ({
             toggleCard(cardKey);
           }}
           className={`hover:text-primary ${
-            !grid[cardKey] && "group-hover:text-primary"
+            grid[cardKey] && "group-hover:text-primary"
           }`}
         >
-          {grid[cardKey] ? <FaRegEyeSlash size={20} /> : <FaRegEye size={20} />}
+          {!grid[cardKey] ? (
+            <FaRegEyeSlash size={20} />
+          ) : (
+            <FaRegEye size={20} />
+          )}
         </button>
       </CardHeader>
 
-      {grid[cardKey] &&
+      {!grid[cardKey] &&
         (isLoading ? <Spinner size="lg" className="p-4" /> : children)}
     </Card>
   );

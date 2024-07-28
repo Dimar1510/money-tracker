@@ -28,7 +28,7 @@ const Dashboard = () => {
         <TransactionsList />
         <div
           className={`flex gap-2 flex-col sm:gap-8 ${
-            !grid["balance"] || !grid["month"] ? "" : "lg:flex-row"
+            grid["balance"] || grid["month"] ? "" : "lg:flex-row"
           }`}
         >
           <BalanceChart />
