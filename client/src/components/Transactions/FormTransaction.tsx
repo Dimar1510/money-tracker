@@ -36,8 +36,8 @@ const FormTransaction: FC<IProps> = ({
   control,
   onClose,
 }) => {
-  const [createTransaction] = useCreateTransactionMutation();
-  const [updateTransaction] = useUpdateTransactionMutation();
+  const [createTransaction, createResult] = useCreateTransactionMutation();
+  const [updateTransaction, updateResult] = useUpdateTransactionMutation();
 
   const onSubmit = async (data: ITransactionFormItem) => {
     try {
@@ -121,6 +121,7 @@ const FormTransaction: FC<IProps> = ({
           {edit ? (
             <div className="flex gap-2">
               <Button
+                isLoading={updateResult.isLoading || createResult.isLoading}
                 type="submit"
                 className="w-full text-default-100 font-medium"
                 color="primary"
@@ -130,6 +131,7 @@ const FormTransaction: FC<IProps> = ({
             </div>
           ) : (
             <Button
+              isLoading={updateResult.isLoading || createResult.isLoading}
               type="submit"
               className="w-full text-default-100 font-medium"
               color="primary"

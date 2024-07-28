@@ -78,7 +78,7 @@ const getChartOptions = (
   ],
 });
 
-const ByCategory = () => {
+const CategoryChart = () => {
   const { data, isLoading } = useGetAllCategoriesQuery();
   const { theme } = useContext(ThemeContext);
   const { expense, income } = useGetTotal();
@@ -107,7 +107,7 @@ const ByCategory = () => {
   if (!isLoading && data)
     return (
       <ToggleCard
-        cardKey="byCategory"
+        cardKey="category"
         cardTitle="Категории транзакций"
         icon={<GrPieChart />}
         isLoading={isLoading}
@@ -150,4 +150,4 @@ const ByCategory = () => {
     );
 };
 
-export default ByCategory;
+export default CategoryChart;

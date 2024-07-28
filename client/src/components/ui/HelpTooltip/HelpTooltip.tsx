@@ -1,7 +1,5 @@
 import { Tooltip } from "@nextui-org/react";
-import React, { useContext } from "react";
 import { IoIosHelpCircleOutline } from "react-icons/io";
-import { ThemeContext } from "src/components/ThemeProvider";
 
 const HelpTooltip = ({
   text,

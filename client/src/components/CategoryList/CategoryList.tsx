@@ -30,7 +30,7 @@ interface IProps {
 }
 
 const CategoryList: FC<IProps> = ({ data }) => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [value, setValue] = useState<string>("");
   const [edit, setEdit] = useState<string | null>(null);

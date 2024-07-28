@@ -1,11 +1,6 @@
 import React from "react";
 import { Control, useController } from "react-hook-form";
-import {
-  Button,
-  ButtonGroupProps,
-  Select,
-  SelectItem,
-} from "@nextui-org/react";
+import { Select, SelectItem } from "@nextui-org/react";
 import { FaLongArrowAltDown, FaLongArrowAltUp } from "react-icons/fa";
 
 interface Props {

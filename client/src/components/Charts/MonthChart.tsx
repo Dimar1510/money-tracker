@@ -7,13 +7,12 @@ import { ru } from "date-fns/locale";
 import { ThemeContext } from "../ThemeProvider";
 import { Card, CardHeader } from "@nextui-org/react";
 setDefaultOptions({ locale: ru });
-import { AgCartesianAxisOptions } from "ag-charts-community";
+import { AgCartesianAxisOptions, AgSeriesTooltip } from "ag-charts-community";
 import { format } from "date-fns";
 import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
 import ChartNavigation from "./ChartNavigation";
 import { MdOutlineStackedBarChart } from "react-icons/md";
 import ToggleCard from "../ui/ToggleCardBody/ToggleCard";
-import { AgBarSeriesTooltipRendererParams } from "ag-charts-community";
 
 interface ISeries {
   type: "bar";
@@ -22,7 +21,7 @@ interface ISeries {
   yName: string;
   stacked?: boolean;
   normalizedTo?: number;
-  tooltip: any;
+  tooltip: AgSeriesTooltip<any>;
 }
 
 interface IMonth {
@@ -36,8 +35,8 @@ interface IYear {
   series: ISeries[];
 }
 
-const ByMonth = () => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
+const MonthChart = () => {
+  const { theme } = useContext(ThemeContext);
   const { isLoading, data: transactions } = useGetAllTransactionsQuery();
   const [slide, setSlide] = useState(0);
 
@@ -79,7 +78,7 @@ const ByMonth = () => {
               stacked: true,
               normalizedTo: 100,
               tooltip: {
-                renderer: (params: AgBarSeriesTooltipRendererParams<any>) => {
+                renderer: (params) => {
                   return {
                     content: `₽ ${params.datum[params.yKey].toLocaleString()}`,
                   };
@@ -120,7 +119,7 @@ const ByMonth = () => {
   if (year)
     return (
       <ToggleCard
-        cardKey="byYear"
+        cardKey="month"
         cardTitle="Расходы"
         icon={<MdOutlineStackedBarChart />}
         isLoading={isLoading}
@@ -142,7 +141,6 @@ const ByMonth = () => {
                 },
                 {
                   type: "number",
-
                   position: "left",
                   label: {
                     formatter: (params) => {
@@ -171,4 +169,4 @@ const ByMonth = () => {
     );
 };
 
-export default ByMonth;
+export default MonthChart;

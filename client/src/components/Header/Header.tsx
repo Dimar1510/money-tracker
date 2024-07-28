@@ -15,7 +15,7 @@ const Header = () => {
   return (
     <header className="bg-default-50 shadow-md w-full fixed z-50">
       <div className="flex justify-between items-center max-w-6xl mx-auto px-1 xs:px-4 py-1">
-        <NavLink to={"/"}>
+        <NavLink to={isAuth ? "/dashboard" : "/"}>
           <h2 className="font-bold flex items-center xs:gap-2">
             <div>
               <GiTakeMyMoney size={55} className="text-primary" />

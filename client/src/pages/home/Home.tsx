@@ -1,5 +1,5 @@
 import { Button, Divider, Image, Link } from "@nextui-org/react";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "src/app/hooks";
 import { selectIsAuthenticated } from "src/app/userSlice";

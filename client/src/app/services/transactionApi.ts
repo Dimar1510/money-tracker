@@ -1,5 +1,5 @@
 import { ITransactionFormItem } from "src/components/Transactions/Transactions";
-import { ByMonth, ByYear, Category, Transaction, User } from "../types";
+import { ByYear, Transaction } from "../types";
 import { api } from "./api";
 
 type GetTransactions = {

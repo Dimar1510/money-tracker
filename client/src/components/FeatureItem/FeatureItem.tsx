@@ -1,7 +1,7 @@
 import { Image } from "@nextui-org/react";
-import React, { Ref, useContext, useRef } from "react";
+import { Ref, useContext } from "react";
 import { ThemeContext } from "../ThemeProvider";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 
 const cardAnimation = {
   hidden: (custom: boolean) => ({
@@ -27,11 +27,6 @@ const FeatureItem = ({
   image?: string;
 }) => {
   const { theme } = useContext(ThemeContext);
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-  });
-  const y = useTransform(scrollYProgress, [0, 1], [-100, 100]);
 
   return (
     <motion.div
@@ -44,7 +39,6 @@ const FeatureItem = ({
       <motion.div
         variants={cardAnimation}
         custom={true}
-        ref={ref}
         className="flex-1 flex flex-col gap-6 p-1"
       >
         <h3 className="text-4xl">{title}</h3>

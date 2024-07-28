@@ -32,18 +32,17 @@ const User = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { data: categories } = useGetAllCategoriesQuery();
-  const { data: transactions, isLoading } = useGetAllTransactionsQuery();
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { data: transactions } = useGetAllTransactionsQuery();
+  const { theme } = useContext(ThemeContext);
   const [error, setError] = useState("");
-  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
-  const { handleSubmit, control, setValue, reset } =
-    useForm<ITransactionFormItem>({
-      mode: "onChange",
-      reValidateMode: "onBlur",
-      defaultValues: {
-        type: "expense",
-      },
-    });
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { handleSubmit, control, reset } = useForm<ITransactionFormItem>({
+    mode: "onChange",
+    reValidateMode: "onBlur",
+    defaultValues: {
+      type: "expense",
+    },
+  });
 
   const handleLogout = () => {
     dispatch(logout());

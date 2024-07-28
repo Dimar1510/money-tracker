@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { selectGrid } from "src/app/gridSlice";
 import { useAppSelector } from "src/app/hooks";
 import { selectCurrent, selectIsAuthenticated } from "src/app/userSlice";
 import BalanceChart from "src/components/Charts/BalanceChart";
-import ByCategory from "src/components/Charts/ByCategory";
-import ByMonth from "src/components/Charts/ByMonth";
+
 import InfoCards from "src/components/InfoCards/InfoCards";
 import TransactionsList from "src/components/Transactions/Transactions";
+import CategoryChart from "src/components/Charts/CategoryChart";
+import MonthChart from "src/components/Charts/MonthChart";
 
 const Dashboard = () => {
   const isAuth = useAppSelector(selectIsAuthenticated);
@@ -27,14 +28,14 @@ const Dashboard = () => {
         <TransactionsList />
         <div
           className={`flex gap-2 flex-col sm:gap-8 ${
-            !grid["balance"] || !grid["byYear"] ? "" : "lg:flex-row"
+            !grid["balance"] || !grid["month"] ? "" : "lg:flex-row"
           }`}
         >
           <BalanceChart />
-          <ByMonth />
+          <MonthChart />
         </div>
 
-        <ByCategory />
+        <CategoryChart />
       </div>
     );
 };

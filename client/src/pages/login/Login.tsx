@@ -16,7 +16,7 @@ interface ILogin {
 
 const Login = () => {
   const isAuth = useAppSelector(selectIsAuthenticated);
-  const { handleSubmit, control, getValues } = useForm<ILogin>({
+  const { handleSubmit, control } = useForm<ILogin>({
     mode: "onChange",
     reValidateMode: "onBlur",
     defaultValues: {

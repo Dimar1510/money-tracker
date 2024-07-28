@@ -4,8 +4,6 @@ import { AgCharts } from "ag-charts-react";
 import { AgCartesianAxisOptions } from "ag-charts-community";
 import { ThemeContext } from "../ThemeProvider";
 import { Card, CardHeader } from "@nextui-org/react";
-import ToggleCardBody from "../ui/ToggleCardBody/ToggleCard";
-import { _capitalise } from "ag-grid-community";
 import { format, setDefaultOptions } from "date-fns";
 import { ru } from "date-fns/locale";
 setDefaultOptions({ locale: ru });
@@ -27,9 +25,9 @@ const BalanceChart = () => {
   const { data: transactions, isLoading } = useGetAllTransactionsQuery();
   const { theme } = useContext(ThemeContext);
   const [slide, setSlide] = useState(0);
-  let currentBalance = 0;
 
   const balanceChartData = useMemo(() => {
+    let currentBalance = 0;
     if (!transactions || !transactions.byYearData) {
       return [];
     }

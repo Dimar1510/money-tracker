@@ -8,11 +8,7 @@ import {
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import {
-  SelectionChangedEvent,
-  GridReadyEvent,
-  _capitalise,
-} from "ag-grid-community";
+import { SelectionChangedEvent, GridReadyEvent } from "ag-grid-community";
 import {
   useDeleteTransactionMutation,
   useGetAllTransactionsQuery,
@@ -25,7 +21,6 @@ import { hasErrorField } from "src/utils/has-error-field";
 import FormTransaction from "./FormTransaction";
 import {
   Button,
-  Card,
   Input,
   Modal,
   ModalBody,
@@ -41,7 +36,6 @@ import DeleteMany from "./DeleteMany";
 import { format } from "date-fns";
 import HelpTooltip from "../ui/HelpTooltip/HelpTooltip";
 import Export from "./Export";
-import ToggleCardBody from "../ui/ToggleCardBody/ToggleCard";
 import { VscTable } from "react-icons/vsc";
 import ToggleCard from "../ui/ToggleCardBody/ToggleCard";
 import Populate from "./Populate";
@@ -63,7 +57,7 @@ export const TransactionsList = () => {
   const [remove, setRemove] = useState<string[]>([]);
   const gridRef = useRef<AgGridReact>(null);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const { handleSubmit, control, setValue, reset } =
     useForm<ITransactionFormItem>({
       mode: "onChange",

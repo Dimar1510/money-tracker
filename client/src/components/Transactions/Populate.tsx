@@ -16,7 +16,7 @@ import ErrorMessage from "../ui/error-message/ErrorMessage";
 
 const Populate = ({ disabled }: { disabled?: boolean }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   const [error, setError] = useState("");
   const [populateTable, status] = usePopulateMutation();
 

@@ -23,7 +23,7 @@ const DeleteMany = ({
   isSuccess: boolean;
 }) => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  const { theme, toggleTheme } = useContext(ThemeContext);
+  const { theme } = useContext(ThemeContext);
   return (
     <>
       <Button
