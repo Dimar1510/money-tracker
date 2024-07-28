@@ -89,6 +89,7 @@ const Populate = ({ disabled }: { disabled?: boolean }) => {
         onPress={onOpen}
         color="success"
         variant="faded"
+        className="text-xs xs:text-sm"
         startContent={<MdOutlinePlaylistAddCheck size={25} />}
         isDisabled={disabled}
       >
