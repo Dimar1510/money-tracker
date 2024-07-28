@@ -52,6 +52,7 @@ const FormInput: React.FC<Props> = ({
       autoComplete="input"
       ref={field.ref}
       className={className}
+      maxLength={64}
     />
   );
 };
