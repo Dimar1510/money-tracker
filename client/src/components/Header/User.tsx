@@ -8,6 +8,7 @@ import {
   ModalBody,
   ModalContent,
   ModalHeader,
+  Spinner,
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
@@ -28,7 +29,7 @@ import Populate from "../Transactions/Populate";
 import { useGetAllTransactionsQuery } from "src/app/services/transactionApi";
 
 const User = () => {
-  const { data } = useCurrentQuery();
+  const { data, isLoading } = useCurrentQuery();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { data: categories } = useGetAllCategoriesQuery();
@@ -53,6 +54,7 @@ const User = () => {
     ? transactions.transactions.length === 0
     : false;
 
+  if (isLoading) return <Spinner />;
   if (data && categories)
     return (
       <>

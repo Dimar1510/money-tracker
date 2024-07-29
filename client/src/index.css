@@ -57,6 +57,7 @@ main {
 /* scrollbar styling for firefox */
 @-moz-document url-prefix() {
   .image-box {
-    scrollbar-color: blue orange !important;
+    scrollbar-color: hsl(var(--nextui-primary)) hsl(var(--nextui-default)) !important;
+    scrollbar-width: thin;
   }
 }
